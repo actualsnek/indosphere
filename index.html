@@ -50,7 +50,6 @@
             cursor: pointer; border: none; transition: 0.3s;
         }
         .enter-btn:hover { background: #fff; box-shadow: 0 0 20px #fff; }
-        .hidden { opacity: 0; pointer-events: none; }
 
         /* --- HEADER --- */
         header {
@@ -82,7 +81,6 @@
 
         .btn { cursor: pointer; text-transform: uppercase; background: #222; border-color: var(--gold); color: var(--gold); min-width: 80px; text-align: center; }
         .btn:hover { background: var(--gold); color: #000; }
-        .btn.active { background: var(--gold); color: #000; box-shadow: 0 0 10px var(--gold); }
 
         select:hover, input:focus { border-color: var(--gold); background: #222; }
 
@@ -108,6 +106,8 @@
             width: 100%; height: 100%;
             background: radial-gradient(circle at 50% 50%, #161616 0%, #050505 100%);
             outline: none;
+            /* Force Hand Cursor via CSS backup */
+            cursor: default;
         }
 
         /* --- TIMELINE --- */
@@ -197,7 +197,7 @@
     <div id="welcome-modal">
         <div class="modal-box">
             <div class="modal-title">Indosphere</div>
-            <div class="modal-desc">The Grand Archive of Indian Tradition.<br><br>Explore 200+ Gods, Sages, and Philosophers.<br><br>• <strong>Scroll</strong> to Zoom<br>• <strong>Drag</strong> to Pan<br>• <strong>Click</strong> to Explore</div>
+            <div class="modal-desc">The Grand Archive of Indian Tradition.<br><br>200+ Gods, Sages, and Philosophers.<br><br>• <strong>Scroll</strong> to Zoom<br>• <strong>Drag</strong> to Pan<br>• <strong>Click</strong> for Details</div>
             <button class="enter-btn" onclick="enterSite()">Enter Archive</button>
         </div>
     </div>
@@ -205,7 +205,7 @@
     <header>
         <div class="brand" onclick="location.reload()">Indosphere</div>
         <div class="controls">
-            <button class="btn" onclick="toggleClusters()" id="clusterBtn">Cluster</button>
+            <button class="btn" onclick="network.fit({animation:true})">Reset View</button>
             <select id="schoolFilter" onchange="applyFilters()">
                 <option value="all">Traditions</option>
                 <optgroup label="Vedanta">
@@ -428,25 +428,6 @@
             {id:"Vallabha", label:"Vallabhacharya", year:1479, displayDate:"1479–1531", school:"Shuddhadvaita", region:"West", subregion:"Gujarat", work:"Anubhashya", others:["Subodhini"], note:"Pushtimarg."},
             {id:"Srinivasa", label:"Srinivasa Acharya", year:1200, displayDate:"c. 12th Century", school:"Dvaitadvaita", region:"South", note:"Disciple."},
             {id:"Vitthalanatha", label:"Vitthalanatha", year:1516, displayDate:"1516–1588", school:"Shuddhadvaita", region:"North", subregion:"Braj", note:"Son of Vallabha."},
-            {id:"Upali", label:"Upali", year:-500, displayDate:"c. 5th Century BCE", school:"Buddhism", region:"East", subregion:"Magadha", note:"Vinaya Master."},
-            {id:"Mahakassapa", label:"Mahakassapa", year:-500, displayDate:"c. 5th Century BCE", school:"Buddhism", region:"East", note:"1st Patriarch."},
-            {id:"Ananda", label:"Ananda", year:-500, displayDate:"c. 5th Century BCE", school:"Buddhism", region:"East", note:"Dhamma Keeper."},
-            {id:"Mahinda", label:"Mahinda", year:-250, displayDate:"c. 3rd Century BCE", school:"Buddhism", region:"South", subregion:"Sri Lanka", note:"Ashoka's Son."},
-            {id:"Buddhaghosa", label:"Buddhaghosa", year:430, displayDate:"c. 5th Century CE", school:"Buddhism", region:"South", subregion:"Sri Lanka", work:"Visuddhimagga", others:[], note:"Theravada."},
-            {id:"Asanga", label:"Asanga", year:350, displayDate:"c. 350 CE", school:"Buddhism", region:"North West", subregion:"Gandhara", work:"Yogacarabhumi", others:["Mahayana-Samgraha"], note:"Yogacara."},
-            {id:"Vasubandhu", label:"Vasubandhu", year:350, displayDate:"c. 350 CE", school:"Buddhism", region:"North West", subregion:"Gandhara", work:"Abhidharmakosha", others:["Vimsatika"], note:"Yogacara."},
-            {id:"Dharmakirti", label:"Dharmakirti", year:600, displayDate:"c. 600 CE", school:"Buddhism", region:"South", work:"Pramanavarttika", others:["Nyayabindu"], note:"Logic."},
-            {id:"Bodhidharma", label:"Bodhidharma", year:480, displayDate:"c. 5th Century CE", school:"Buddhism", region:"China", subregion:"Kanchipuram", work:"Zen Teachings", others:[], note:"Zen Founder."},
-            {id:"Padmasambhava", label:"Padmasambhava", year:750, displayDate:"c. 8th Century CE", school:"Buddhism", region:"Tibet", subregion:"Swat", note:"Guru Rinpoche."},
-            {id:"Atisha", label:"Atisha", year:982, displayDate:"982–1054", school:"Buddhism", region:"Tibet", subregion:"Bengal", note:"Kadampa Founder."},
-            {id:"Tsongkhapa", label:"Tsongkhapa", year:1357, displayDate:"1357–1419", school:"Buddhism", region:"Tibet", note:"Gelug Founder."},
-            {id:"DalaiLama", label:"Dalai Lama (14th)", year:1935, displayDate:"b. 1935", school:"Buddhism", region:"Tibet", note:"14th.", others:[]},
-            {id:"GautamaGanadhara", label:"Gautama Ganadhara", year:-500, displayDate:"c. 6th Century BCE", school:"Jainism", region:"East", subregion:"Bihar", note:"Disciple."},
-            {id:"Sudharma", label:"Sudharma", year:-500, displayDate:"c. 6th Century BCE", school:"Jainism", region:"East", subregion:"Bihar", note:"Disciple."},
-            {id:"Umaswati", label:"Umaswati", year:200, displayDate:"c. 2nd Century CE", school:"Jainism", region:"West", work:"Tattvartha Sutra", others:[], note:"Shared Text."},
-            {id:"Siddhasena", label:"Siddhasena", year:480, displayDate:"c. 5th Century CE", school:"Jainism", region:"West", work:"Nyayavatara", others:[], note:"Logician."},
-            {id:"Haribhadra", label:"Haribhadra Suri", year:750, displayDate:"c. 8th Century CE", school:"Jainism", region:"West", subregion:"Gujarat", work:"Saddarshanasamuccaya", others:[], note:"Philosopher."},
-            {id:"Hemachandra", label:"Hemachandra", year:1088, displayDate:"1088–1173", school:"Jainism", region:"West", subregion:"Gujarat", work:"Yogasastra", others:["Siddha-Hema"], note:"Polymath."},
             {id:"Vidyapati", label:"Vidyapati", year:1352, displayDate:"1352–1448", school:"Literature", region:"East", subregion:"Mithila", work:"Padavali", others:["Kirtilata"], note:"Maithili Poet."},
             {id:"Jayadeva", label:"Jayadeva", year:1200, displayDate:"c. 1200 CE", school:"Bhakti", region:"East", subregion:"Odisha", work:"Gita Govinda", others:["Dasavatara Stotra"], note:"Poet."},
             {id:"Chaitanya", label:"Chaitanya", year:1486, displayDate:"1486–1534", school:"Bhakti", region:"East", subregion:"Bengal", work:"Siksastakam", others:[], note:"Gaudiya Founder."},
@@ -603,38 +584,60 @@
             return "#ddd";
         }
 
+        function enterSite() {
+            document.getElementById('welcome-modal').style.opacity = 0;
+            setTimeout(() => { document.getElementById('welcome-modal').style.display = 'none'; }, 500);
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const startId = urlParams.get('id');
+            if (startId) {
+                setTimeout(() => {
+                    const node = allNodes.find(n => n.id === startId);
+                    if (node) {
+                        network.selectNodes([startId]);
+                        network.focus(startId, { scale: 1.5, animation: true });
+                        openPanel(node.data);
+                    }
+                }, 1000);
+            }
+        }
+
         // Init Data
         const seenIds = new Set();
+        const uniqueRawData = [];
         rawData.forEach(item => {
             if (!seenIds.has(item.id)) {
                 seenIds.add(item.id);
-                
-                let schoolColor = item.school ? getColor(item.school) : "#ddd";
-                let finalColor = { background: schoolColor, border: '#333' };
-                let finalShape = 'dot';
-                let finalSize = 25;
-                let finalFont = { size: 16 };
-
-                if (item.isDeity) {
-                    finalShape = 'star';
-                    finalColor = { background: '#e0f7fa', border: '#00ffff' };
-                    finalSize = 40;
-                    finalFont = { size: 24 };
-                }
-
-                allNodes.push({
-                    id: item.id,
-                    label: item.label,
-                    group: item.school || "Unknown",
-                    value: finalSize,
-                    color: finalColor,
-                    shape: finalShape,
-                    font: finalFont,
-                    data: item
-                });
+                uniqueRawData.push(item);
             }
         });
-        document.getElementById('total-counter').innerText = `Total Archived: ${seenIds.size}`;
+        document.getElementById('total-counter').innerText = `Total Archived: ${uniqueRawData.length}`;
+
+        uniqueRawData.forEach(p => {
+            let schoolColor = p.school ? getColor(p.school) : "#ddd";
+            let finalColor = { background: schoolColor, border: '#333' };
+            let finalShape = 'dot';
+            let finalSize = 25;
+            let finalFont = { size: 16 };
+
+            if (p.isDeity) {
+                finalShape = 'star';
+                finalColor = { background: '#e0f7fa', border: '#00ffff' };
+                finalSize = 40;
+                finalFont = { size: 24 };
+            }
+
+            allNodes.push({
+                id: p.id,
+                label: p.label,
+                group: p.school || "Unknown",
+                value: finalSize,
+                color: finalColor,
+                shape: finalShape,
+                font: finalFont,
+                data: p
+            });
+        });
 
         lineages.forEach(l => {
             if (seenIds.has(l.s) && seenIds.has(l.t)) {
@@ -652,7 +655,7 @@
             }
         });
 
-        // --- NETWORK & PHYSICS ---
+        // --- OPTIMIZED PHYSICS ---
         const container = document.getElementById('network');
         const data = { nodes: new vis.DataSet(allNodes), edges: new vis.DataSet(allEdges) };
         const options = {
@@ -669,8 +672,8 @@
                 enabled: true,
                 stabilization: {
                     enabled: true,
-                    iterations: 1500, // HIGH ITERATIONS = PRE-CALCULATED LAYOUT (No lag on load)
-                    updateInterval: 100
+                    iterations: 200, 
+                    updateInterval: 50
                 },
                 barnesHut: {
                     gravitationalConstant: -12000, 
@@ -684,7 +687,6 @@
 
         network = new vis.Network(container, data, options);
 
-        // Turn off physics after load to save battery/CPU
         network.on("stabilizationIterationsDone", function () {
             network.setOptions({ physics: { enabled: false } }); 
         });
@@ -697,20 +699,27 @@
         network.on("click", function(params) {
             if (params.nodes.length > 0) {
                 const nodeId = params.nodes[0];
+                
+                // FIXED CLUSTER CLICK LOGIC
                 if (network.isCluster(nodeId)) {
                     network.openCluster(nodeId);
+                    // Re-stabilize smoothly after opening
+                    network.setOptions({ physics: { enabled: true } });
+                    setTimeout(() => { network.setOptions({ physics: { enabled: false } }); }, 1500);
                     return;
                 }
+                
                 const node = allNodes.find(n => n.id === nodeId);
                 if (node) {
                     openPanel(node.data);
                     
-                    // Focus Mode (Dim others)
+                    // Strict Focus Mode
                     const connected = network.getConnectedNodes(nodeId);
                     const allIds = data.nodes.getIds();
                     const updates = allIds.map(id => {
                         if (network.isCluster(id)) return { id: id, color: { opacity: 1 } };
-                        return { id: id, color: { opacity: (id === nodeId || connected.includes(id)) ? 1 : 0.1 } };
+                        // Ghost everyone not connected
+                        return { id: id, color: { opacity: (id === nodeId || connected.includes(id)) ? 1 : 0.05 } };
                     });
                     data.nodes.update(updates);
                     
@@ -721,40 +730,34 @@
                 }
             } else {
                 closePanel();
-                // Reset Opacity
                 const allIds = data.nodes.getIds();
                 const resets = allIds.map(id => {
                     const original = allNodes.find(n => n.id === id);
-                    // Check if node still exists (might be clustered)
                     if(original) return { id: id, color: original.color };
-                    return {id: id, color: {opacity: 1}}; // Cluster backup
+                    return {id: id, color: {opacity: 1}};
                 });
                 data.nodes.update(resets);
             }
         });
 
-        // --- CLUSTERING (FLOWER BLOOM) ---
+        // --- CLUSTERING ---
+        let clustersActive = false;
         function toggleClusters() {
-            const clusterIds = Object.keys(network.body.nodes).filter(id => id.startsWith('cluster_'));
-            if (clusterIds.length > 0) {
-                // Open all
+            if (clustersActive) {
+                const clusterIds = Object.keys(network.body.nodes).filter(id => id.startsWith('cluster_'));
                 clusterIds.forEach(id => network.openCluster(id));
+                clustersActive = false;
                 document.getElementById('clusterBtn').innerText = "Cluster";
-                
-                // Wiggle effect
                 network.setOptions({ physics: { enabled: true } });
-                network.stabilize();
                 setTimeout(() => { network.setOptions({ physics: { enabled: false } }); }, 1500);
             } else {
-                // Create Clusters
                 const schools = [...new Set(allNodes.map(n => n.group))];
                 schools.forEach(school => {
                     if(school === 'Unknown' || school === 'Deity') return;
-                    
-                    // FLOWER BLOOM LOGIC: Force positions when opening? 
-                    // Vis.js handles basic explosion. We just customize the cluster node.
                     const clusterOptions = {
-                        joinCondition: function(child) { return child.group === school; },
+                        joinCondition: function(child) {
+                            return child.group === school; 
+                        },
                         clusterNodeProperties: { 
                             id: 'cluster_' + school, 
                             borderWidth: 3, 
@@ -762,18 +765,64 @@
                             color: getColor(school), 
                             label: school, 
                             font: {size: 30, face: 'Cinzel', color: '#fff'},
-                            size: 50,
+                            size: 60,
                             allowSingleNodeCluster: false
                         }
                     };
                     network.cluster(clusterOptions);
                 });
+                clustersActive = true;
                 document.getElementById('clusterBtn').innerText = "Uncluster";
             }
         }
 
+        // --- FILTER ---
+        function applyFilters() {
+            if(clustersActive) toggleClusters();
+
+            const sFilter = document.getElementById('schoolFilter').value;
+            const rFilter = document.getElementById('regionFilter').value;
+            let targetIds = new Set();
+
+            allNodes.forEach(n => {
+                let p = n.data;
+                let mS = (sFilter === 'all') || (p.school === sFilter);
+                if (sFilter === 'Buddhism' && ['Theravada','Mahayana','Vajrayana','Zen'].includes(p.school)) mS = true;
+                let mR = (rFilter === 'all') || (p.region === rFilter || p.subregion === rFilter);
+                if (mS && mR) targetIds.add(n.id);
+            });
+
+            let visibleIds = new Set(targetIds);
+            if (sFilter !== 'all' || rFilter !== 'all') {
+                let changed = true;
+                while(changed) {
+                    changed = false;
+                    allEdges.forEach(e => {
+                        if(visibleIds.has(e.to) && !visibleIds.has(e.from)) {
+                             visibleIds.add(e.from);
+                             changed = true;
+                        }
+                    });
+                }
+                const filteredNodes = allNodes.filter(n => visibleIds.has(n.id));
+                const filteredEdges = allEdges.filter(e => visibleIds.has(e.from) && visibleIds.has(e.to));
+                data.nodes.clear(); data.edges.clear();
+                data.nodes.add(filteredNodes);
+                data.edges.add(filteredEdges);
+            } else {
+                data.nodes.clear(); data.edges.clear();
+                data.nodes.add(allNodes);
+                data.edges.add(allEdges);
+            }
+
+            // WIGGLE ON FILTER
+            network.setOptions({ physics: { enabled: true } });
+            network.stabilize();
+            setTimeout(() => { network.setOptions({ physics: { enabled: false } }); }, 1500);
+        }
+
         // --- TIMELINE ---
-        const timelineData = new vis.DataSet(rawData.filter(x => !x.isDeity).map((t, i) => ({
+        const timelineData = new vis.DataSet(uniqueRawData.filter(x => !x.isDeity).map((t, i) => ({
             id: i, content: t.label, start: new Date(0).setFullYear(t.year),
             type: 'point', className: 'vis-point', personId: t.id,
             style: `border-color: ${getColor(t.school)}` 
@@ -784,7 +833,6 @@
             start: new Date(0).setFullYear(1000), end: new Date(0).setFullYear(2000), zoomMin: 1000 * 60 * 60 * 24 * 365 * 10
         });
 
-        // Timeline Click Logic Fixed
         timeline.on('select', (props) => {
             if (props.items.length) {
                 const item = timelineData.get(props.items[0]);
@@ -800,28 +848,8 @@
         function jumpToDate(year) { timeline.moveTo(new Date(0).setFullYear(year)); }
 
         // --- PANEL UI ---
-        function enterSite() {
-            document.getElementById('welcome-modal').style.opacity = 0;
-            setTimeout(() => { document.getElementById('welcome-modal').style.display = 'none'; }, 500);
-            
-            // Deep Link Check
-            const urlParams = new URLSearchParams(window.location.search);
-            const startId = urlParams.get('id');
-            if (startId) {
-                setTimeout(() => {
-                    const node = allNodes.find(n => n.id === startId);
-                    if (node) {
-                        network.selectNodes([startId]);
-                        network.focus(startId, { scale: 1.5, animation: true });
-                        openPanel(node.data);
-                    }
-                }, 1000);
-            }
-        }
-
         function openPanel(d) {
             document.getElementById('p-name').innerText = d.iast || d.label;
-            
             if (d.isDeity) {
                 document.getElementById('p-religion').innerText = d.religion || "";
                 document.getElementById('p-dates').innerText = "Divine / Timeless";
@@ -866,7 +894,6 @@
             panel.classList.remove('open');
             document.getElementById('panel-content').style.opacity = "0";
             
-            // Reset opacity
             const allIds = data.nodes.getIds();
             const resets = allIds.map(id => {
                 const original = allNodes.find(n => n.id === id);
@@ -874,52 +901,6 @@
                 return {id: id, color: {opacity: 1}};
             });
             data.nodes.update(resets);
-        }
-
-        // --- FILTER FUNCTION (Re-activates Physics briefly) ---
-        function applyFilters() {
-            if(clustersActive) toggleClusters(); // Uncluster first
-
-            const sFilter = document.getElementById('schoolFilter').value;
-            const rFilter = document.getElementById('regionFilter').value;
-            let targetIds = new Set();
-
-            allNodes.forEach(n => {
-                let p = n.data;
-                let mS = (sFilter === 'all') || (p.school === sFilter);
-                if (sFilter === 'Buddhism' && ['Theravada','Mahayana','Vajrayana','Zen'].includes(p.school)) mS = true;
-                let mR = (rFilter === 'all') || (p.region === rFilter || p.subregion === rFilter);
-                if (mS && mR) targetIds.add(n.id);
-            });
-
-            // Show Lineage
-            if (sFilter !== 'all' || rFilter !== 'all') {
-                let visibleIds = new Set(targetIds);
-                let changed = true;
-                while(changed) {
-                    changed = false;
-                    allEdges.forEach(e => {
-                        if(visibleIds.has(e.to) && !visibleIds.has(e.from)) {
-                             visibleIds.add(e.from);
-                             changed = true;
-                        }
-                    });
-                }
-                const filteredNodes = allNodes.filter(n => visibleIds.has(n.id));
-                const filteredEdges = allEdges.filter(e => visibleIds.has(e.from) && visibleIds.has(e.to));
-                data.nodes.clear(); data.edges.clear();
-                data.nodes.add(filteredNodes);
-                data.edges.add(filteredEdges);
-            } else {
-                data.nodes.clear(); data.edges.clear();
-                data.nodes.add(allNodes);
-                data.edges.add(allEdges);
-            }
-
-            // WIGGLE
-            network.setOptions({ physics: { enabled: true } });
-            network.stabilize();
-            setTimeout(() => { network.setOptions({ physics: { enabled: false } }); }, 1500);
         }
 
         // --- SEARCH ---
@@ -952,7 +933,7 @@
         });
         document.addEventListener('click', function(e) { if (e.target !== searchInput && e.target !== searchResults) searchResults.style.display = 'none'; });
 
-        // --- DRAG GUTTER ---
+        // --- GUTTER ---
         const gutter = document.getElementById('drag-gutter');
         const timelineDiv = document.getElementById('mytimeline');
         let isDragging = false; let startY, startHeight;
