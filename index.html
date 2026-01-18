@@ -665,21 +665,51 @@
         const container = document.getElementById('network');
         const data = { nodes: nodes, edges: edges };
 
-        const options = {
+       const options = {
             nodes: {
-                borderWidth: 1,
+                borderWidth: 2,
+                shape: 'dot',
+                size: 20,
                 shadow: true,
-                font: { face: 'Noto Serif', color: '#ccc' }
+                font: { 
+                    face: 'Noto Serif', 
+                    color: '#e0e0e0',
+                    size: 16,
+                    strokeWidth: 0,
+                    align: 'center',
+                    background: '#050505' /* This creates the black box behind text */
+                },
+                color: {
+                    border: '#333',
+                    background: '#666',
+                    highlight: { border: '#d4af37', background: '#d4af37' }
+                }
             },
             edges: {
+                width: 1,
                 smooth: { type: "continuous", roundness: 0.2 },
-                arrows: { to: { scaleFactor: 0.5 } }
+                arrows: { to: { scaleFactor: 0.5 } },
+                color: { opacity: 0.5 }, /* Makes lines less distracting */
+                font: { align: 'middle', strokeWidth: 0, background: '#050505' }
             },
             physics: {
-                stabilization: { iterations: 150, updateInterval: 25 },
-                barnesHut: { gravitationalConstant: -2000, springConstant: 0.04, springLength: 95 }
+                enabled: true,
+                stabilization: { iterations: 200 },
+                barnesHut: {
+                    gravitationalConstant: -4000, /* Stronger repulsion spreads nodes out */
+                    centralGravity: 0.3,
+                    springLength: 150, /* Longer lines = less clutter */
+                    springConstant: 0.04,
+                    damping: 0.09,
+                    avoidOverlap: 0.5 /* Prevents nodes from covering each other */
+                }
             },
-            interaction: { hover: true, tooltipDelay: 50, hideEdgesOnDrag: true }
+            interaction: { 
+                hover: true, 
+                tooltipDelay: 200, 
+                hideEdgesOnDrag: true,
+                zoomView: true
+            }
         };
         const network = new vis.Network(container, data, options);
 
