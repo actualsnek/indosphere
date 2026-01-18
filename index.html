@@ -72,7 +72,7 @@
             position: relative; 
             display: flex;
             overflow: hidden; 
-            height: calc(100vh - 270px); /* Ensure space for header + timeline */
+            height: calc(100vh - 270px); 
         }
 
         #network {
@@ -325,7 +325,7 @@
             {id:"Varuna", label:"Varuṇa", group:"Deity", region:"Divine", isDeity:true, note:"God of Waters; Vedic deity of cosmic order."},
 
             // --- ANCIENT RISHIS ---
-            {id:"Shakti", label:"Śakti (Rishi)", year:-2500, school:"Vedas", region:"North", others:[], note:"Son of Vashishta; Father of Parashara."},
+            {id:"ShaktiRishi", label:"Śakti (Rishi)", year:-2500, school:"Vedas", region:"North", others:[], note:"Son of Vashishta; Father of Parashara."},
             {id:"Dhanvantari", label:"Dhanvantari", year:-3000, school:"Ayurveda", region:"Vedic", work:"Ayurveda", others:["Dhanvantari Nighantu"], note:"God of Medicine."},
             {id:"Vashishta", label:"Vashishta", year:-3000, school:"Vedas", region:"North", work:"Maṇḍala 7 of the Ṛgveda", others:["Yoga Vashishta"], note:"saptarṣiḥ."},
             {id:"Parashara", label:"Parashara", year:-2000, school:"Vedas", region:"North", work:"Vishnu Purana", others:["Parashara Smriti"], note:"Father of Vyasa."},
@@ -561,54 +561,99 @@
 
         // --- 2. LINEAGES (The Connections) ---
         const lineages = [
-            {s:"Shiva", t:"Vasugupta", type:"Divine"}, {s:"Shiva", t:"Shankara", type:"Divine"},
-            {s:"Narayana", t:"Brahma", type:"tradition"}, {s:"Brahma", t:"Vashishta", type:"tradition"},
-            {s:"Vashishta", t:"Shakti", type:"tradition"}, {s:"Shakti", t:"Parashara", type:"tradition"},
-            {s:"Parashara", t:"Vyasa", type:"tradition"}, {s:"Vyasa", t:"Shuka", type:"tradition"},
-            {s:"Shuka", t:"Gaudapada", type:"tradition"}, {s:"Gaudapada", t:"Govinda", type:"Guru"},
-            {s:"Govinda", t:"Shankara", type:"Guru"}, {s:"Shankara", t:"Suresvara", type:"Guru"},
-            {s:"Shankara", t:"Padmapada", type:"Guru"}, {s:"Shankara", t:"Totaka", type:"Guru"},
-            {s:"Shankara", t:"Hastamalaka", type:"Guru"}, {s:"Suresvara", t:"Vacaspati", type:"Lineage"},
-            {s:"Vacaspati", t:"Sarvajnatman", type:"Influence"}, {s:"Padmapada", t:"Prakasatman", type:"Lineage"},
-            {s:"Shankara", t:"Anandagiri", type:"Lineage"}, {s:"Vacaspati", t:"Amalananda", type:"Influence"},
-            {s:"Shankara", t:"BharatiTirtha", type:"Lineage"}, {s:"BharatiTirtha", t:"Vidyaranya", type:"Guru"},
-            {s:"Vidyaranya", t:"SadanandaYogindra", type:"Lineage"}, {s:"Madhusudana", t:"Prakashananda", type:"Influence"},
-            {s:"Shankara", t:"Madhusudana", type:"Lineage"}, {s:"Shankara", t:"Appayya", type:"Lineage"},
-            {s:"Shankara", t:"DharmarajaAdhvarindra", type:"Lineage"}, {s:"Shankara", t:"Nrisimhashrama", type:"Lineage"},
-            {s:"Shankara", t:"BrahmanandaSaraswati", type:"Lineage"}, {s:"BrahmanandaSaraswati", t:"KarpatriMaharaj", type:"Guru"},
-            {s:"KarpatriMaharaj", t:"NischalanandaSaraswati", type:"Guru"}, {s:"Shankara", t:"Sacchidanandendra", type:"Lineage"},
-            {s:"Ramakrishna", t:"Vivekananda", type:"Guru"}, {s:"Vivekananda", t:"RamanaMaharshi", type:"Influence"},
-            {s:"RamanaMaharshi", t:"NisargadattaMaharaj", type:"Influence"}, {s:"Shankara", t:"ChandrashekharaBharati", type:"Lineage"},
-            {s:"ChandrashekharaBharati", t:"AbhinavaVidyatirtha", type:"Guru"}, {s:"AbhinavaVidyatirtha", t:"BharatiTirthaCurrent", type:"Guru"},
+            // --- ADVAITA / VEDIC LINEAGE UPDATES ---
+            {s:"Shiva", t:"Vasugupta", type:"Divine"}, 
+            {s:"Shiva", t:"Shankara", type:"Influence"}, // Updated
+            {s:"Narayana", t:"Brahma", type:"Lineage"}, // Updated
+            {s:"Brahma", t:"Vashishta", type:"Lineage"}, // Updated
+            {s:"Vashishta", t:"ShaktiRishi", type:"Lineage"}, // Updated
+            {s:"ShaktiRishi", t:"Parashara", type:"Lineage"}, // Updated
+            {s:"Parashara", t:"Vyasa", type:"Lineage"}, // Updated
+            {s:"Vyasa", t:"Shuka", type:"Lineage"}, // Updated
+            {s:"Shuka", t:"Gaudapada", type:"Lineage"}, // Updated
+            {s:"Gaudapada", t:"Govinda", type:"Lineage (Guru)"}, // Updated
+            {s:"Govinda", t:"Shankara", type:"Lineage (Guru)"}, // Updated
+            {s:"Shankara", t:"Suresvara", type:"Lineage (Guru)"}, // Updated
+            {s:"Shankara", t:"Padmapada", type:"Lineage (Guru)"}, // Updated
+            {s:"Shankara", t:"Totaka", type:"Lineage (Guru)"}, // Updated
+            {s:"Shankara", t:"Hastamalaka", type:"Lineage (Guru)"}, // Updated
+            {s:"Suresvara", t:"Vacaspati", type:"Lineage"}, 
+            {s:"Vacaspati", t:"Sarvajnatman", type:"Influence"}, 
+            {s:"Padmapada", t:"Prakasatman", type:"Lineage"}, 
+            {s:"Shankara", t:"Anandagiri", type:"Lineage"}, 
+            {s:"Vacaspati", t:"Amalananda", type:"Influence"}, 
+            {s:"Shankara", t:"BharatiTirtha", type:"Lineage"}, 
+            {s:"BharatiTirtha", t:"Vidyaranya", type:"Lineage (Guru)"}, // Updated
+            {s:"Vidyaranya", t:"SadanandaYogindra", type:"Lineage"}, 
+            {s:"Madhusudana", t:"Prakashananda", type:"Influence"}, 
+            {s:"Shankara", t:"Madhusudana", type:"Lineage"}, 
+            {s:"Shankara", t:"Appayya", type:"Lineage"}, 
+            {s:"Shankara", t:"DharmarajaAdhvarindra", type:"Lineage"}, 
+            {s:"Shankara", t:"Nrisimhashrama", type:"Lineage"}, 
+            {s:"Shankara", t:"BrahmanandaSaraswati", type:"Lineage"}, 
+            {s:"BrahmanandaSaraswati", t:"KarpatriMaharaj", type:"Lineage (Guru)"}, // Updated
+            {s:"KarpatriMaharaj", t:"NischalanandaSaraswati", type:"Lineage (Guru)"}, // Updated
+            {s:"Shankara", t:"Sacchidanandendra", type:"Lineage"}, 
+            {s:"Ramakrishna", t:"Vivekananda", type:"Lineage (Guru)"}, // Updated
+            {s:"Vivekananda", t:"RamanaMaharshi", type:"Influence"}, 
+            {s:"RamanaMaharshi", t:"NisargadattaMaharaj", type:"Influence"}, 
+            {s:"Shankara", t:"ChandrashekharaBharati", type:"Lineage"}, 
+            {s:"ChandrashekharaBharati", t:"AbhinavaVidyatirtha", type:"Lineage (Guru)"}, // Updated
+            {s:"AbhinavaVidyatirtha", t:"BharatiTirthaCurrent", type:"Lineage (Guru)"}, // Updated
             {s:"Shankara", t:"NischalanandaSaraswati", type:"Lineage"},
-            {s:"Narayana", t:"Madhva", type:"Divine"}, {s:"Madhva", t:"Padmanabha", type:"Guru"}, 
-            {s:"Padmanabha", t:"Narahari", type:"Guru"}, {s:"Madhva", t:"Jayatirtha", type:"Lineage"}, 
-            {s:"Jayatirtha", t:"Vyasatirtha", type:"Lineage"}, {s:"Vyasatirtha", t:"Raghavendra", type:"Lineage"},
-            {s:"Narayana", t:"Nammalvar", type:"Inspiration"}, {s:"Nammalvar", t:"Nathamuni", type:"Inspiration"},
-            {s:"Nathamuni", t:"Yamuna", type:"GrandGuru"}, {s:"Yamuna", t:"Ramanuja", type:"Preceptor"},
-            {s:"Ramanuja", t:"Desika", type:"Lineage"}, {s:"Ramanuja", t:"Pillai", type:"Lineage"},
-            {s:"Vasugupta", t:"Somananda", type:"Lineage"}, {s:"Somananda", t:"Utpaladeva", type:"Guru"},
-            {s:"Utpaladeva", t:"Abhinavagupta", type:"GrandGuru"}, {s:"Abhinavagupta", t:"Kshemaraja", type:"Guru"},
-            {s:"Abhinavagupta", t:"Lakshmanjoo", type:"Lineage"},
-            {s:"Gautama", t:"Vatsyayana", type:"Lineage"}, {s:"Udayana", t:"Gangesa", type:"Influence"},
-            {s:"Gangesa", t:"Raghunatha", type:"Lineage"}, {s:"Raghunatha", t:"Gadadhara", type:"Lineage"},
-            {s:"Buddha", t:"Mahakassapa", type:"Guru"}, {s:"Mahakassapa", t:"Ananda", type:"Guru"},
-            {s:"Buddha", t:"Nagarjuna", type:"Inspiration"}, {s:"Nagarjuna", t:"Aryadeva", type:"Guru"},
-            {s:"Asanga", t:"Vasubandhu", type:"Brother"}, {s:"Vasubandhu", t:"Dignaga", type:"Lineage"},
-            {s:"Bodhidharma", t:"Huineng", type:"Lineage"}, {s:"Padmasambhava", t:"Milarepa", type:"Lineage"},
-            {s:"Tsongkhapa", t:"DalaiLama", type:"Lineage"},
-            {s:"Mahavira", t:"GautamaGanadhara", type:"Guru"}, {s:"Mahavira", t:"Bhadrabahu", type:"Lineage"},
-            {s:"Bhadrabahu", t:"Kundakunda", type:"Lineage"}, {s:"Mahavira", t:"Hemachandra", type:"Lineage"},
-            {s:"Jaimini", t:"Shabara", type:"Lineage"}, {s:"Shabara", t:"Kumarila", type:"Lineage"},
-            {s:"Kumarila", t:"Mandana", type:"Guru"}, {s:"Kumarila", t:"Prabhakara", type:"Guru"},
-            {s:"Kapila", t:"Asuri", type:"Guru"}, {s:"Asuri", t:"Panchashikha", type:"Guru"},
-            {s:"Panchashikha", t:"IshvaraKrishna", type:"Lineage"},
-            {s:"Ramanuja", t:"Madhva", type:"Reaction"}, {s:"Jayadeva", t:"Chaitanya", type:"Influence"},
-            {s:"Chaitanya", t:"Tagore", type:"Influence"}, {s:"Ramakrishna", t:"Vivekananda", type:"Guru"},
-            {s:"Vivekananda", t:"Nivedita", type:"Guru"},
-            {s:"Panini", t:"Voltaire", type:"Study"}, {s:"Vyasa", t:"Oppenheimer", type:"Study"},
-            {s:"Yajnavalkya", t:"Schopenhauer", type:"Study"}, {s:"Vivekananda", t:"Tesla", type:"Meeting"},
-            {s:"Kalidasa", t:"Goethe", type:"Inspiration"}, {s:"Jones", t:"MaxMuller", type:"Influence"}
+
+            // --- OTHER TRADITIONS (Kept as is or generic "Guru") ---
+            {s:"Narayana", t:"Madhva", type:"Divine"}, 
+            {s:"Madhva", t:"Padmanabha", type:"Guru"}, 
+            {s:"Padmanabha", t:"Narahari", type:"Guru"}, 
+            {s:"Madhva", t:"Jayatirtha", type:"Lineage"}, 
+            {s:"Jayatirtha", t:"Vyasatirtha", type:"Lineage"}, 
+            {s:"Vyasatirtha", t:"Raghavendra", type:"Lineage"}, 
+            {s:"Narayana", t:"Nammalvar", type:"Inspiration"}, 
+            {s:"Nammalvar", t:"Nathamuni", type:"Inspiration"}, 
+            {s:"Nathamuni", t:"Yamuna", type:"GrandGuru"}, 
+            {s:"Yamuna", t:"Ramanuja", type:"Preceptor"}, 
+            {s:"Ramanuja", t:"Desika", type:"Lineage"}, 
+            {s:"Ramanuja", t:"Pillai", type:"Lineage"}, 
+            {s:"Vasugupta", t:"Somananda", type:"Lineage"}, 
+            {s:"Somananda", t:"Utpaladeva", type:"Guru"}, 
+            {s:"Utpaladeva", t:"Abhinavagupta", type:"GrandGuru"}, 
+            {s:"Abhinavagupta", t:"Kshemaraja", type:"Guru"}, 
+            {s:"Abhinavagupta", t:"Lakshmanjoo", type:"Lineage"}, 
+            {s:"Gautama", t:"Vatsyayana", type:"Lineage"}, 
+            {s:"Udayana", t:"Gangesa", type:"Influence"}, 
+            {s:"Gangesa", t:"Raghunatha", type:"Lineage"}, 
+            {s:"Raghunatha", t:"Gadadhara", type:"Lineage"}, 
+            {s:"Buddha", t:"Mahakassapa", type:"Guru"}, 
+            {s:"Mahakassapa", t:"Ananda", type:"Guru"}, 
+            {s:"Buddha", t:"Nagarjuna", type:"Inspiration"}, 
+            {s:"Nagarjuna", t:"Aryadeva", type:"Guru"}, 
+            {s:"Asanga", t:"Vasubandhu", type:"Brother"}, 
+            {s:"Vasubandhu", t:"Dignaga", type:"Lineage"}, 
+            {s:"Bodhidharma", t:"Huineng", type:"Lineage"}, 
+            {s:"Padmasambhava", t:"Milarepa", type:"Lineage"}, 
+            {s:"Tsongkhapa", t:"DalaiLama", type:"Lineage"}, 
+            {s:"Mahavira", t:"GautamaGanadhara", type:"Guru"}, 
+            {s:"Mahavira", t:"Bhadrabahu", type:"Lineage"}, 
+            {s:"Bhadrabahu", t:"Kundakunda", type:"Lineage"}, 
+            {s:"Mahavira", t:"Hemachandra", type:"Lineage"}, 
+            {s:"Jaimini", t:"Shabara", type:"Lineage"}, 
+            {s:"Shabara", t:"Kumarila", type:"Lineage"}, 
+            {s:"Kumarila", t:"Mandana", type:"Guru"}, 
+            {s:"Kumarila", t:"Prabhakara", type:"Guru"}, 
+            {s:"Kapila", t:"Asuri", type:"Guru"}, 
+            {s:"Asuri", t:"Panchashikha", type:"Guru"}, 
+            {s:"Panchashikha", t:"IshvaraKrishna", type:"Lineage"}, 
+            {s:"Ramanuja", t:"Madhva", type:"Reaction"}, 
+            {s:"Jayadeva", t:"Chaitanya", type:"Influence"}, 
+            {s:"Chaitanya", t:"Tagore", type:"Influence"}, 
+            {s:"Vivekananda", t:"Nivedita", type:"Guru"}, 
+            {s:"Panini", t:"Voltaire", type:"Study"}, 
+            {s:"Vyasa", t:"Oppenheimer", type:"Study"}, 
+            {s:"Yajnavalkya", t:"Schopenhauer", type:"Study"}, 
+            {s:"Vivekananda", t:"Tesla", type:"Meeting"}, 
+            {s:"Kalidasa", t:"Goethe", type:"Inspiration"}, 
+            {s:"Jones", t:"MaxMuller", type:"Influence"}
         ];
 
         // --- NETWORK SETUP ---
@@ -700,12 +745,14 @@
                 let t = uniqueData.find(x => x.id === l.t);
                 
                 // If direct find fails, check if the ID exists in the map
-                if (!s && seenIds.has(l.s)) s = {id: l.s}; // Fallback (shouldn't happen with de-dupe)
+                if (!s && seenIds.has(l.s)) s = {id: l.s}; 
                 if (!t && seenIds.has(l.t)) t = {id: l.t};
 
                 if (s && t) {
-                    let color = (l.type && l.type.includes("Guru")) ? "#d4af37" : "#555";
-                    let dashes = (l.type && !l.type.includes("Guru"));
+                    // COLOR LOGIC: "Lineage (Guru)" = Gold, others = Grey
+                    let color = (l.type === "Lineage (Guru)" || l.type === "Guru") ? "#d4af37" : "#555";
+                    let dashes = (l.type !== "Lineage (Guru)" && l.type !== "Guru");
+                    
                     allEdges.push({
                         from: l.s,
                         to: l.t,
@@ -832,8 +879,22 @@
 
     document.getElementById('p-note').innerText = d.note || "";
     
-    let parent = lineages.find(l => l.t === d.id && l.type && l.type.includes("Guru"));
-    document.getElementById('p-lineage').innerText = parent ? `Disciple of ${parent.s}` : "Source / Independent";
+    // SIDE PANEL LINEAGE LOGIC
+    let parent = lineages.find(l => l.t === d.id); // Find the incoming connection
+    let lineageText = "Source / Independent";
+    if (parent) {
+        if (parent.type === "Lineage (Guru)") {
+            lineageText = `Disciple of ${parent.s}`;
+        } else if (parent.type === "Lineage") {
+            lineageText = `In Lineage of ${parent.s}`;
+        } else if (parent.type === "Influence") {
+            lineageText = `Influenced by ${parent.s}`;
+        } else {
+            // Fallback for other traditions
+            lineageText = `${parent.type} of ${parent.s}`; 
+        }
+    }
+    document.getElementById('p-lineage').innerText = lineageText;
 
     const ul = document.getElementById('p-others');
     ul.innerHTML = "";
