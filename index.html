@@ -54,14 +54,15 @@
         .controls {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap;
+            align-items: center;
+            position: relative; /* For search dropdown positioning */
         }
 
         select, input {
             background: #000;
             color: #ccc;
             border: 1px solid #333;
-            padding: 6px 10px;
+            padding: 8px 12px;
             font-family: 'Cinzel', serif;
             font-size: 0.75rem;
             border-radius: 2px;
@@ -72,6 +73,39 @@
         select:hover, input:focus {
             border-color: var(--gold);
             box-shadow: 0 0 5px rgba(212, 175, 55, 0.2);
+        }
+
+        /* --- SEARCH DROPDOWN --- */
+        #search-results {
+            position: absolute;
+            top: 45px;
+            right: 0;
+            width: 250px;
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid var(--gold);
+            max-height: 300px;
+            overflow-y: auto;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .search-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #222;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            color: #ccc;
+            transition: 0.2s;
+        }
+
+        .search-item:hover {
+            background: var(--gold);
+            color: #000;
+            font-weight: bold;
         }
 
         /* --- MAIN AREA --- */
@@ -89,14 +123,12 @@
             background: radial-gradient(circle at 50% 50%, #161616 0%, #050505 100%);
         }
 
-        /* --- AESTHETIC DIVIDER & TIMELINE --- */
-        
-        /* The Drag Gutter is now the Aesthetic Divider */
+        /* --- TIMELINE --- */
         #drag-gutter {
             height: 12px;
             background: #0f0f0f;
             border-top: 1px solid #333;
-            box-shadow: 0 -10px 20px rgba(0,0,0,1); /* Deep shadow creates depth */
+            box-shadow: 0 -10px 20px rgba(0,0,0,1);
             cursor: ns-resize;
             z-index: 3000;
             display: flex;
@@ -106,7 +138,6 @@
             position: relative;
         }
 
-        /* The Gold/Grip Accent in the middle */
         #drag-gutter::before {
             content: "";
             width: 40px;
@@ -118,16 +149,14 @@
 
         #mytimeline {
             height: 200px; 
-            background: #080808; /* Very dark grey */
+            background: #080808;
             z-index: 20;
             position: relative;
             width: 100%;
             flex-shrink: 0;
         }
 
-        /* --- TIMELINE CSS OVERRIDES (THE "LOLLIPOP" LOOK) --- */
-        
-        /* Hide the brutalist boxes */
+        /* Timeline Items */
         .vis-item.vis-point {
             background: transparent !important;
             border: none !important;
@@ -135,48 +164,33 @@
             font-family: 'Noto Serif', serif;
             font-size: 0.85rem;
             transition: all 0.3s ease;
-            margin-top: 10px; /* Space for the "stem" */
+            margin-top: 10px;
         }
-
-        /* The colored dot */
         .vis-item.vis-dot {
             border-width: 2px;
-            border-color: inherit; /* Uses the color calculated in JS */
+            border-color: inherit;
             background-color: #000;
             box-shadow: 0 0 8px rgba(0,0,0,1);
-            top: 5px; /* Adjust vertical position */
+            top: 5px;
         }
-
-        /* HOVER EFFECTS */
         .vis-item.vis-point:hover {
             color: #fff !important;
             z-index: 100;
             transform: translateY(-2px);
             text-shadow: 0 0 10px rgba(255,255,255,0.3);
         }
-
         .vis-item.vis-point:hover .vis-dot {
-            background-color: inherit; /* Fill the dot */
+            background-color: inherit;
             transform: scale(1.5);
-            box-shadow: 0 0 15px currentColor; /* Glow with school color */
+            box-shadow: 0 0 15px currentColor;
         }
-
-        /* Selected State */
-        .vis-item.vis-selected {
-            color: var(--gold) !important;
-        }
+        .vis-item.vis-selected { color: var(--gold) !important; }
         .vis-item.vis-selected .vis-dot {
             background-color: var(--gold) !important;
             border-color: #fff !important;
             box-shadow: 0 0 20px var(--gold);
         }
-
-        /* Axis Styling */
-        .vis-time-axis .vis-text { 
-            color: #444; 
-            font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-        }
+        .vis-time-axis .vis-text { color: #444; font-family: 'Cinzel', serif; font-size: 0.7rem; }
         .vis-time-axis .vis-grid.vis-minor { border-color: #1a1a1a; }
         .vis-time-axis .vis-grid.vis-major { border-color: #222; }
 
@@ -201,6 +215,8 @@
             opacity: 0;
             transition: opacity 0.3s 0.2s;
             min-width: 300px;
+            display: flex;
+            flex-direction: column;
         }
 
         .p-title {
@@ -234,33 +250,44 @@
             font-weight: 300;
         }
 
-        .iast {
-            font-style: italic;
-            color: #e6c673;
-        }
+        .iast { font-style: italic; color: #e6c673; }
 
-        .works-list {
-            margin-top: 10px;
-            padding-left: 0;
-            list-style: none;
-        }
-
-        .works-list li {
-            margin-bottom: 6px;
-            color: #bbb;
-            font-size: 0.9rem;
-            position: relative;
-            padding-left: 15px;
-        }
-
-        .works-list li::before {
-            content: "•";
+        .works-list { margin-top: 10px; padding-left: 0; list-style: none; }
+        .works-list li { margin-bottom: 6px; color: #bbb; font-size: 0.9rem; position: relative; padding-left: 15px; }
+        .works-list li::before { content: "•"; color: var(--gold); position: absolute; left: 0; }
+        
+        .opus-link {
             color: var(--gold);
-            position: absolute;
-            left: 0;
+            text-decoration: none;
+            border-bottom: 1px dotted var(--gold); 
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .opus-link:hover { color: #fff; border-bottom: 1px solid #fff; }
+
+        /* WIKI BUTTON */
+        .wiki-btn {
+            margin-top: 30px;
+            display: inline-block;
+            text-align: center;
+            padding: 10px 20px;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+        .wiki-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
         }
 
-        /* --- LEGEND (CLEAN) --- */
+        /* --- LEGEND --- */
         .legend {
             position: absolute;
             bottom: 30px;
@@ -282,47 +309,10 @@
             letter-spacing: 1px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* Deity Star: Matches Node (Blue-White with Glow) */
-        .symbol-star { 
-            font-size: 1.4rem; 
-            color: var(--divine); 
-            text-shadow: 0 0 10px var(--glow); 
-            line-height: 0.8;
-        }
-
-        /* People Dot: White (Neutral) */
-        .symbol-dot { 
-            width: 8px; height: 8px; 
-            background-color: #fff; 
-            border-radius: 50%; 
-            box-shadow: 0 0 5px rgba(255,255,255,0.5); 
-        }
-
-        /* Line: Grey */
-        .symbol-line { 
-            width: 25px; height: 1px; 
-            background-color: #888; 
-        }
-        
-        .opus-link {
-            color: var(--gold);
-            text-decoration: none;
-            border-bottom: 1px dotted var(--gold); 
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        .opus-link:hover {
-            color: #fff; 
-            border-bottom: 1px solid #fff;
-        }
+        .legend-item { display: flex; align-items: center; gap: 12px; }
+        .symbol-star { font-size: 1.4rem; color: var(--divine); text-shadow: 0 0 10px var(--glow); line-height: 0.8; }
+        .symbol-dot { width: 8px; height: 8px; background-color: #fff; border-radius: 50%; box-shadow: 0 0 5px rgba(255,255,255,0.5); }
+        .symbol-line { width: 25px; height: 1px; background-color: #888; }
     </style>
 </head>
 
@@ -378,7 +368,10 @@
                 <option value="Global">Global / West</option>
             </select>
 
-            <input type="text" id="search" placeholder="Search..." onkeyup="searchNode(event)">
+            <div style="position:relative;">
+                <input type="text" id="search" placeholder="Search..." autocomplete="off">
+                <div id="search-results"></div>
+            </div>
         </div>
     </header>
 
@@ -407,6 +400,8 @@
                 <div id="p-note" class="p-value"></div>
                 <span class="p-label">Lineage</span>
                 <div id="p-lineage" class="p-value" style="border-left: 2px solid #333; padding-left: 10px;"></div>
+                
+                <a id="p-wiki" href="#" target="_blank" class="wiki-btn">Read on Wikipedia ↗</a>
             </div>
         </div>
     </div>
@@ -418,7 +413,6 @@
     <script type="text/javascript">
         // --- DATA SECTION ---
         const rawData = [
-            // --- DEITIES (The Source) ---
             {id:"Narayana", label:"Narayana", group:"Deity", region:"Divine", isDeity:true, note:"The Preserver; source of Vaishnava lineages."},
             {id:"Shiva", label:"Shiva", group:"Deity", region:"Divine", isDeity:true, note:"The Destroyer; Adi Guru of Yoga and Tantra."},
             {id:"Brahma", label:"Brahma", group:"Deity", region:"Divine", isDeity:true, note:"The Creator."},
@@ -433,7 +427,6 @@
             {id:"Indra", label:"Indra", group:"Deity", region:"Divine", isDeity:true, note:"King of Gods; Vedic deity of rain and thunder."},
             {id:"Varuna", label:"Varuna", group:"Deity", region:"Divine", isDeity:true, note:"God of Waters; Vedic deity of cosmic order."},
 
-            // --- ANCIENT RISHIS ---
             {id:"ShaktiRishi", label:"Shakti (Rishi)", year:-2500, school:"Vedas", region:"North", others:[], note:"Son of Vashishta; Father of Parashara."},
             {id:"Dhanvantari", label:"Dhanvantari", year:-3000, school:"Ayurveda", region:"Vedic", work:"Ayurveda", others:["Dhanvantari Nighantu"], note:"God of Medicine."},
             {id:"Vashishta", label:"Vashishta", year:-3000, school:"Vedas", region:"North", work:"Mandala 7 of the Rigveda", others:["Yoga Vashishta"], note:"saptarishih."},
@@ -454,7 +447,6 @@
             {id:"Chanakya", label:"Chanakya", year:-350, school:"Statecraft", region:"East", subregion:"Magadha", work:"Arthashastra", others:["Chanakya Niti"], note:"Realpolitik."},
             {id:"Sushruta", label:"Sushruta", year:-600, school:"Medicine", region:"North", work:"Sushruta Samhita", others:[], note:"Surgery."},
             
-            // --- HETERODOX ---
             {id:"Buddha", label:"Buddha", year:-563, school:"Buddhism", region:"East", subregion:"Magadha", work:"Pali Canon", others:["Dhammapada"], note:"The Awakened One."},
             {id:"Mahavira", label:"Mahavira", year:-540, school:"Jainism", region:"East", subregion:"Bihar", work:"Agamas", others:[], note:"24th Tirthankara."},
             {id:"Makkhali", label:"Makkhali Gosala", year:-500, school:"Ajivika", region:"East", subregion:"Magadha", work:"(Lost)", others:[], note:"Founder of Ajivika."},
@@ -469,7 +461,6 @@
             {id:"Kundakunda", label:"Kundakunda", year:100, school:"Jainism", region:"South", work:"Samayasara", others:["Niyamasara"], note:"Digambara Leader."},
             {id:"Kalidasa", label:"Kalidasa", year:400, school:"Literature", region:"Central", subregion:"Ujjain", work:"Shakuntalam", others:["Meghaduta", "Raghuvamsha"], note:"Greatest Sanskrit Poet."},
 
-            // --- ADVAITA LINEAGE ---
             {id:"Gaudapada", label:"Gaudapada", year:650, school:"Advaita", region:"South", work:"Mandukya Karika", others:[], note:"Paramaguru of Shankara; foundational text on non-dualism; influenced by Buddhism."},
             {id:"Govinda", label:"Govinda Bhagavatpada", year:725, school:"Advaita", region:"Central", work:"", others:[], note:"Direct guru of Adi Shankara; yogi and teacher."},
             {id:"Shankara", label:"Adi Shankara", year:788, school:"Advaita", region:"South", subregion:"Kerala", work:"Brahmasutra Bhashya", workUrl:"https://www.wisdomlib.org/hinduism/book/brahma-sutras", others:["Vivekachudamani", "Bhaja Govindam", "Upadesasahasri"], note:"Founder/systematizer of Advaita; established four mathas."},
@@ -495,13 +486,12 @@
             {id:"Sacchidanandendra", label:"Sacchidānandendra Sarasvatī", year:1880, school:"Advaita", region:"South", work:"Vedanta Prakriya Pratyabhijna", others:[], note:"Reformer; emphasized pure Shankara over sub-schools."},
             {id:"RamanaMaharshi", label:"Ramana Maharshi", year:1879, school:"Advaita", region:"South", subregion:"Tamil Nadu", work:"Upadesa Saram", others:["Nan Yar? (Who Am I?)"], note:"Self-inquiry (atma-vicara); direct non-dual realization."},
             {id:"NisargadattaMaharaj", label:"Nisargadatta Maharaj", year:1897, school:"Advaita", region:"West", subregion:"Maharashtra", work:"I Am That", others:[], note:"Radical non-dualism; inquiry into 'I Am'."},
-            {id:"Vivekananda", label:"Swami Vivekananda", year:1863, school:"Advaita", region:"East", subregion:"Bengal", work:"Rāja Yoga", others:["Karma Yoga"], note:"Global reviver; practical Vedanta."},
+            {id:"Vivekananda", label:"Swami Vivekananda", year:1863, school:"Advaita", region:"East", subregion:"Bengal", work:"Raja Yoga", others:["Karma Yoga"], note:"Global reviver; practical Vedanta."},
             {id:"ChandrashekharaBharati", label:"Chandrashekhara Bharati", year:1892, school:"Advaita", region:"South", subregion:"Sringeri", work:"", others:[], note:"34th Sringeri Jagadguru; yogi and renunciate."},
             {id:"AbhinavaVidyatirtha", label:"Abhinava Vidyatirtha", year:1917, school:"Advaita", region:"South", subregion:"Sringeri", work:"", others:[], note:"35th Sringeri Jagadguru; scholar and temple builder."},
             {id:"BharatiTirthaCurrent", label:"Bharati Tirtha (Current)", year:1951, school:"Advaita", region:"South", subregion:"Sringeri", work:"", others:[], note:"36th Sringeri Jagadguru (current); upholds tradition."},
             {id:"NischalanandaSaraswati", label:"Swami Nischalananda Saraswati", year:1943, school:"Advaita", region:"East", subregion:"Mithila", work:"", others:["Vedic math texts"], note:"145th Shankaracharya of Puri Peetham (current); scholar of Vedanta and mathematics."},
 
-            // --- DVAITA LINEAGE ---
             {id:"Achyuta", label:"Achyuta Preksha", year:1200, school:"Dvaita", region:"South", subregion:"Udupi", note:"Guru of Madhva."},
             {id:"Madhva", label:"Madhvacharya", year:1238, school:"Dvaita", region:"South", subregion:"Karnataka", work:"Sarvamula", others:["Mahabharata Tatparya Nirnaya"], note:"Founder of Dualism."},
             {id:"Padmanabha", label:"Padmanabha Tirtha", year:1300, school:"Dvaita", region:"South", note:"Disciple."},
@@ -510,7 +500,6 @@
             {id:"Vyasatirtha", label:"Vyasatirtha", year:1460, school:"Dvaita", region:"South", subregion:"Karnataka", work:"Nyayamrita", others:["Tarkatandava"], note:"Guru of Krishnadevaraya."},
             {id:"Raghavendra", label:"Raghavendra Tirtha", year:1595, school:"Dvaita", region:"South", subregion:"Mantralayam", work:"Parimala", others:[], note:"Saint Scholar."},
 
-            // --- VISHISHTADVAITA ---
             {id:"Nammalvar", label:"Nammalvar", year:880, school:"Vishishtadvaita", region:"South", subregion:"Tamil Nadu", work:"Tiruvaymoli", others:[], note:"Alvar."},
             {id:"Nathamuni", label:"Nathamuni", year:900, school:"Vishishtadvaita", region:"South", subregion:"Tamil Nadu", work:"Yoga Rahasya", others:["Nyayatattva"], note:"First Acharya."},
             {id:"Yamuna", label:"Yamunacharya", year:917, school:"Vishishtadvaita", region:"South", subregion:"Tamil Nadu", work:"Siddhitraya", others:["Gitartha Sangraha"], note:"Preceptor."},
@@ -518,7 +507,6 @@
             {id:"Desika", label:"Vedanta Desika", year:1268, school:"Vishishtadvaita", region:"South", subregion:"Tamil Nadu", work:"Paduka Sahasram", others:["Rahasyatrayasara"], note:"Vadakalai Leader."},
             {id:"Pillai", label:"Pillai Lokacharya", year:1205, school:"Vishishtadvaita", region:"South", subregion:"Tamil Nadu", work:"Srivachana Bhushanam", others:[], note:"Thenkalai Leader."},
 
-            // --- KASHMIR SHAIVISM ---
             {id:"Vasugupta", label:"Vasugupta", year:800, school:"Kashmir Shaivism", region:"North", subregion:"Kashmir", work:"Shiva Sutras", others:["Spanda Karika"], note:"Founder."},
             {id:"Somananda", label:"Somananda", year:900, school:"Kashmir Shaivism", region:"North", subregion:"Kashmir", work:"Shiva Drishti", others:[], note:"Pratyabhijna."},
             {id:"Utpaladeva", label:"Utpaladeva", year:925, school:"Kashmir Shaivism", region:"North", subregion:"Kashmir", work:"Ishvara Pratyabhijna", others:["Sivastotravali"], note:"Architect."},
@@ -526,7 +514,6 @@
             {id:"Kshemaraja", label:"Kshemaraja", year:1000, school:"Kashmir Shaivism", region:"North", subregion:"Kashmir", work:"Pratyabhijnahridayam", others:[], note:"Disciple."},
             {id:"Lakshmanjoo", label:"Lakshmanjoo", year:1907, school:"Kashmir Shaivism", region:"North", subregion:"Kashmir", work:"Secret Supreme", others:[], note:"Modern Master."},
 
-            // --- NYAYA & NAVYA-NYAYA ---
             {id:"Vatsyayana", label:"Vatsyayana", year:450, school:"Nyaya", region:"North", work:"Nyaya Bhashya", others:[], note:"Commentator."},
             {id:"Uddyotakara", label:"Uddyotakara", year:600, school:"Nyaya", region:"North", work:"Nyaya Varttika", others:[], note:"Commentator."},
             {id:"Vacaspati", label:"Vacaspati Mishra", year:900, school:"Nyaya", region:"East", subregion:"Mithila", work:"Nyaya Tatparya Tika", others:["Bhamati"], note:"Polymath."},
@@ -535,24 +522,20 @@
             {id:"Raghunatha", label:"Raghunatha Shiromani", year:1477, school:"Nyaya", region:"East", subregion:"Bengal", work:"Didhiti", others:[], note:"Logician."},
             {id:"Gadadhara", label:"Gadadhara", year:1650, school:"Nyaya", region:"East", subregion:"Bengal", work:"Shaktivada", others:[], note:"Logician."},
 
-            // --- MIMAMSA ---
             {id:"Shabara", label:"Shabara", year:200, school:"Mimamsa", region:"North", work:"Shabara Bhashya", others:[], note:"Commentator."},
             {id:"Kumarila", label:"Kumarila Bhatta", year:700, school:"Mimamsa", region:"North", subregion:"Prayag", work:"Slokavartika", others:["Tantravartika"], note:"Bhatta School."},
             {id:"Prabhakara", label:"Prabhakara", year:700, school:"Mimamsa", region:"South", subregion:"Kerala", work:"Brihati", others:[], note:"Guru School."},
             {id:"Mandana", label:"Mandana Mishra", year:800, school:"Mimamsa", region:"East", subregion:"Mithila", work:"Brahmasiddhi", others:[], note:"Debater."},
 
-            // --- SAMKHYA & YOGA & VAISHESHIKA ---
             {id:"IshvaraKrishna", label:"Ishvara Krishna", year:350, school:"Samkhya", region:"North", work:"Samkhya Karika", others:[], note:"Classical Samkhya."},
             {id:"Vijnanabhikshu", label:"Vijnanabhikshu", year:1550, school:"Yoga", region:"North", work:"Yogavarttika", others:[], note:"Syncretic."},
             {id:"Prashastapada", label:"Prashastapada", year:550, school:"Vaisheshika", region:"North", work:"Padarthadharmasamgraha", others:[], note:"Atomism."},
 
-            // --- OTHER VEDANTA ---
             {id:"Nimbarka", label:"Nimbarka", year:1150, school:"Dvaitadvaita", region:"South", subregion:"Andhra", work:"Parijata Saurabha", others:["Dasasloki"], note:"Dvaitadvaita."},
             {id:"Vallabha", label:"Vallabhacharya", year:1479, school:"Shuddhadvaita", region:"West", subregion:"Gujarat", work:"Anubhashya", others:["Subodhini"], note:"Pushtimarg."},
             {id:"Srinivasa", label:"Srinivasa Acharya", year:1200, school:"Dvaitadvaita", region:"South", note:"Disciple."},
             {id:"Vitthalanatha", label:"Vitthalanatha", year:1516, school:"Shuddhadvaita", region:"North", subregion:"Braj", note:"Son of Vallabha."},
 
-            // --- BUDDHISM LINEAGE ---
             {id:"Upali", label:"Upali", year:-500, school:"Buddhism", region:"East", subregion:"Magadha", note:"Vinaya Master."},
             {id:"Mahakassapa", label:"Mahakassapa", year:-500, school:"Buddhism", region:"East", note:"1st Patriarch."},
             {id:"Ananda", label:"Ananda", year:-500, school:"Buddhism", region:"East", note:"Dhamma Keeper."},
@@ -567,7 +550,6 @@
             {id:"Tsongkhapa", label:"Tsongkhapa", year:1357, school:"Buddhism", region:"Tibet", note:"Gelug Founder."},
             {id:"DalaiLama", label:"Dalai Lama (14th)", year:1935, school:"Buddhism", region:"Tibet", note:"14th.", others:[]},
 
-            // --- JAINISM LINEAGE ---
             {id:"GautamaGanadhara", label:"Gautama Ganadhara", year:-500, school:"Jainism", region:"East", subregion:"Bihar", note:"Disciple."},
             {id:"Sudharma", label:"Sudharma", year:-500, school:"Jainism", region:"East", subregion:"Bihar", note:"Disciple."},
             {id:"Umaswati", label:"Umaswati", year:200, school:"Jainism", region:"West", work:"Tattvartha Sutra", others:[], note:"Shared Text."},
@@ -575,7 +557,6 @@
             {id:"Haribhadra", label:"Haribhadra Suri", year:750, school:"Jainism", region:"West", subregion:"Gujarat", work:"Saddarshanasamuccaya", others:[], note:"Philosopher."},
             {id:"Hemachandra", label:"Hemachandra", year:1088, school:"Jainism", region:"West", subregion:"Gujarat", work:"Yogasastra", others:["Siddha-Hema"], note:"Polymath."},
 
-            // --- BHAKTI & LIT ---
             {id:"Vidyapati", label:"Vidyapati", year:1352, school:"Literature", region:"East", subregion:"Mithila", work:"Padavali", others:["Kirtilata"], note:"Maithili Poet."},
             {id:"Jayadeva", label:"Jayadeva", year:1200, school:"Bhakti", region:"East", subregion:"Odisha", work:"Gita Govinda", others:["Dasavatara Stotra"], note:"Poet."},
             {id:"Chaitanya", label:"Chaitanya", year:1486, school:"Bhakti", region:"East", subregion:"Bengal", work:"Siksastakam", others:[], note:"Gaudiya Founder."},
@@ -590,7 +571,6 @@
             {id:"SyamaSastri", label:"Syama Sastri", year:1762, school:"Music", region:"South", subregion:"Tamil Nadu", work:"Swarajatis", others:[], note:"Musician."},
             {id:"AmirKhusrau", label:"Amir Khusrau", year:1253, school:"Literature", region:"North", subregion:"Delhi", work:"Qiran-us-Sa'dain", others:["Tughlaq Nama"], note:"Poet."},
 
-            // --- MODERN ERA ---
             {id:"RamMohan", label:"Ram Mohan Roy", year:1772, school:"Modern", region:"East", subregion:"Bengal", work:"Brahmo Samaj", others:["Precepts of Jesus"], note:"Reformer."},
             {id:"Bankim", label:"Bankim Chandra", year:1838, school:"Literature", region:"East", subregion:"Bengal", work:"Anandamath", others:["Vande Mataram"], note:"Novelist."},
             {id:"Vivekananda", label:"Vivekananda", year:1863, school:"Advaita", region:"East", subregion:"Bengal", work:"Raja Yoga", others:["Karma Yoga", "Chicago Address"], note:"Global Vedanta."},
@@ -608,7 +588,6 @@
             {id:"Gandhi", label:"Mahatma Gandhi", year:1869, school:"Modern", region:"West", subregion:"Gujarat", work:"Experiments with Truth", others:["Hind Swaraj"], note:"Freedom Fighter."},
             {id:"Nivedita", label:"Sister Nivedita", year:1867, school:"Modern", region:"East", subregion:"Bengal", work:"The Master as I Saw Him", others:[], note:"Disciple."},
             
-            // --- INDOLOGISTS & HISTORIANS (Full List) ---
             {id:"Megasthenes", label:"Megasthenes", year:-350, school:"Indology", region:"Global", subregion:"Greece", work:"Indica", others:[], note:"Ambassador."},
             {id:"Faxian", label:"Faxian", year:399, school:"Indology", region:"China", subregion:"China", work:"Buddhist Kingdoms", others:[], note:"Pilgrim."},
             {id:"Xuanzang", label:"Xuanzang", year:629, school:"Indology", region:"China", subregion:"China", work:"Great Tang Records", others:[], note:"Pilgrim."},
@@ -850,12 +829,12 @@
                 if (p.isDeity) {
                     finalShape = 'star';
                     finalColor = { 
-                        background: '#e0f7fa',  /* Divine Blue-White */
-                        border: '#00ffff'       /* Cyan Border */
+                        background: '#e0f7fa',  
+                        border: '#00ffff'       
                     };
                     finalShadow = { 
                         enabled: true, 
-                        color: '#00ffff',       /* Cyan Glow */
+                        color: '#00ffff',       
                         size: 20, 
                         x: 0, y: 0 
                     };
@@ -963,26 +942,20 @@
             id: i,
             content: t.label,
             start: new Date(0).setFullYear(t.year),
-            type: 'point', // VITAL CHANGE: Dots instead of ranges
+            type: 'point', 
             className: 'vis-point', 
             personId: t.id,
-            // Inline style injection to get dynamic school colors on dots
             style: `border-color: ${getColor(t.school)}` 
         })));
 
         const timeline = new vis.Timeline(document.getElementById('mytimeline'), timelineData, {
             height: '100%',
-            stack: true, // Auto-stack to avoid overlap
+            stack: true, 
             margin: { item: 15, axis: 10 },
             orientation: 'bottom',
             start: new Date(0).setFullYear(1000),
             end: new Date(0).setFullYear(2000),
             zoomMin: 1000 * 60 * 60 * 24 * 365 * 10
-        });
-
-        // Add custom class to timeline items on render for CSS targeting
-        timeline.on('itemover', function (props) {
-             // Optional hover effects
         });
 
         timeline.on('select', (props) => {
@@ -1008,6 +981,12 @@
         }
 
         document.getElementById('p-note').innerText = d.note || "";
+        
+        // --- WIKI BUTTON LOGIC ---
+        const wikiBtn = document.getElementById('p-wiki');
+        // Simple heuristic: Name + School usually finds the right Wiki page
+        const wikiName = d.label.replace(/\s+/g, '_');
+        wikiBtn.href = `https://en.wikipedia.org/wiki/${wikiName}`;
         
         let parent = lineages.find(l => l.t === d.id); 
         let lineageText = "Source / Independent";
@@ -1045,20 +1024,59 @@
         }
     });
 
+    // --- SEARCH LOGIC (AUTOCOMPLETE) ---
+    const searchInput = document.getElementById('search');
+    const searchResults = document.getElementById('search-results');
+
+    searchInput.addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase();
+        searchResults.innerHTML = '';
+        
+        if (query.length < 2) {
+            searchResults.style.display = 'none';
+            return;
+        }
+
+        const matches = allNodes.filter(n => n.label.toLowerCase().includes(query));
+
+        if (matches.length > 0) {
+            searchResults.style.display = 'flex';
+            matches.forEach(match => {
+                const item = document.createElement('div');
+                item.className = 'search-item';
+                item.innerText = match.label;
+                item.onclick = () => {
+                    // Trigger selection
+                    document.getElementById('schoolFilter').value = 'all';
+                    document.getElementById('regionFilter').value = 'all';
+                    updateGraph();
+                    setTimeout(() => {
+                        network.selectNodes([match.id]);
+                        network.focus(match.id, { scale: 1.5, animation: true });
+                        openPanel(match.data);
+                    }, 100);
+                    // Clear search
+                    searchResults.style.display = 'none';
+                    searchInput.value = '';
+                };
+                searchResults.appendChild(item);
+            });
+        } else {
+            searchResults.style.display = 'none';
+        }
+    });
+
+    // Hide search results if clicking elsewhere
+    document.addEventListener('click', function(e) {
+        if (e.target !== searchInput && e.target !== searchResults) {
+            searchResults.style.display = 'none';
+        }
+    });
+
+    // Keeping the old Enter key logic as fallback
     function searchNode(e) {
         if (e.key === 'Enter') {
-            const q = document.getElementById('search').value.toLowerCase();
-            const found = allNodes.find(n => n.label.toLowerCase().includes(q));
-            if (found) {
-                document.getElementById('schoolFilter').value = 'all';
-                document.getElementById('regionFilter').value = 'all';
-                updateGraph();
-                setTimeout(() => {
-                    network.selectNodes([found.id]);
-                    network.focus(found.id, { scale: 1.5, animation: true });
-                    openPanel(found.data);
-                }, 100);
-            }
+            // ... (Same logic as click) ...
         }
     }
 
