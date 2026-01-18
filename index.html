@@ -14,7 +14,7 @@
             --gold: #d4af37;
             --divine: #e0f7fa; 
             --glow: #00ffff;   
-            --border: #333;
+            --border: #444;
         }
 
         body {
@@ -28,18 +28,18 @@
             flex-direction: column;
         }
 
-        /* --- HEADER --- */
+        /* --- HEADER (IMPROVED VISIBILITY) --- */
         header {
             height: 70px;
             flex-shrink: 0;
-            background: rgba(10, 10, 10, 0.95);
-            border-bottom: 1px solid #222;
+            background: #111;
+            border-bottom: 1px solid var(--gold); /* Gold border for visibility */
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 25px;
             z-index: 1000;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
         }
 
         .brand {
@@ -48,32 +48,38 @@
             letter-spacing: 2px;
             color: var(--gold);
             font-weight: 700;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
         }
 
         .controls {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             align-items: center;
-            position: relative; /* For search dropdown positioning */
+            position: relative;
         }
 
+        /* High Visibility Inputs */
         select, input {
-            background: #000;
-            color: #ccc;
-            border: 1px solid #333;
+            background: #1a1a1a;
+            color: #fff;
+            border: 1px solid #666; /* Visible grey border */
             padding: 8px 12px;
             font-family: 'Cinzel', serif;
             font-size: 0.75rem;
-            border-radius: 2px;
+            border-radius: 4px;
             outline: none;
             transition: 0.3s;
+            min-width: 150px;
         }
 
-        select:hover, input:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 5px rgba(212, 175, 55, 0.2);
+        select:hover, input:focus, input:hover {
+            border-color: var(--gold); /* Gold on hover */
+            background: #222;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
         }
+
+        /* Placeholder text color */
+        ::placeholder { color: #888; opacity: 1; }
 
         /* --- SEARCH DROPDOWN --- */
         #search-results {
@@ -81,32 +87,39 @@
             top: 45px;
             right: 0;
             width: 250px;
-            background: rgba(10, 10, 10, 0.95);
+            background: #111;
             border: 1px solid var(--gold);
             max-height: 300px;
             overflow-y: auto;
-            display: none; /* Hidden by default */
+            display: none; 
             flex-direction: column;
             z-index: 2000;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            box-shadow: 0 10px 30px rgba(0,0,0,1);
         }
 
         .search-item {
             padding: 10px 15px;
             cursor: pointer;
-            border-bottom: 1px solid #222;
+            border-bottom: 1px solid #333;
             font-family: 'Cinzel', serif;
             font-size: 0.8rem;
             color: #ccc;
             transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .search-item span.meta {
+            font-size: 0.7rem;
+            color: var(--gold);
+            font-style: italic;
         }
 
         .search-item:hover {
             background: var(--gold);
             color: #000;
-            font-weight: bold;
         }
+        .search-item:hover span.meta { color: #222; }
 
         /* --- MAIN AREA --- */
         .main-container {
@@ -156,7 +169,6 @@
             flex-shrink: 0;
         }
 
-        /* Timeline Items */
         .vis-item.vis-point {
             background: transparent !important;
             border: none !important;
@@ -190,7 +202,7 @@
             border-color: #fff !important;
             box-shadow: 0 0 20px var(--gold);
         }
-        .vis-time-axis .vis-text { color: #444; font-family: 'Cinzel', serif; font-size: 0.7rem; }
+        .vis-time-axis .vis-text { color: #555; font-family: 'Cinzel', serif; font-size: 0.7rem; }
         .vis-time-axis .vis-grid.vis-minor { border-color: #1a1a1a; }
         .vis-time-axis .vis-grid.vis-major { border-color: #222; }
 
@@ -232,7 +244,7 @@
         }
 
         .p-label {
-            color: #555;
+            color: #666;
             font-family: 'Cinzel', serif;
             font-size: 0.65rem;
             letter-spacing: 2px;
@@ -265,7 +277,6 @@
         }
         .opus-link:hover { color: #fff; border-bottom: 1px solid #fff; }
 
-        /* WIKI BUTTON */
         .wiki-btn {
             margin-top: 30px;
             display: inline-block;
@@ -281,11 +292,7 @@
             transition: all 0.3s;
             border-radius: 2px;
         }
-        .wiki-btn:hover {
-            background: var(--gold);
-            color: #000;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
-        }
+        .wiki-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
 
         /* --- LEGEND --- */
         .legend {
@@ -411,7 +418,7 @@
     <div id="mytimeline"></div>
 
     <script type="text/javascript">
-        // --- DATA SECTION ---
+        // --- DATA SECTION (Updated with correct Wiki Links) ---
         const rawData = [
             {id:"Narayana", label:"Narayana", group:"Deity", region:"Divine", isDeity:true, note:"The Preserver; source of Vaishnava lineages."},
             {id:"Shiva", label:"Shiva", group:"Deity", region:"Divine", isDeity:true, note:"The Destroyer; Adi Guru of Yoga and Tantra."},
@@ -447,6 +454,7 @@
             {id:"Chanakya", label:"Chanakya", year:-350, school:"Statecraft", region:"East", subregion:"Magadha", work:"Arthashastra", others:["Chanakya Niti"], note:"Realpolitik."},
             {id:"Sushruta", label:"Sushruta", year:-600, school:"Medicine", region:"North", work:"Sushruta Samhita", others:[], note:"Surgery."},
             
+            {id:"KarpatriMaharaj", label:"Swami Karpatri Maharaj", wiki:"Karpatri", year:1907, school:"Advaita", region:"North", subregion:"Varanasi", work:"", others:["Ram Rajya Parishad texts"], note:"Dharma Samrat; founder of Akhil Bharatiya Ram Rajya Parishad; guru of Nischalananda."},
             {id:"Buddha", label:"Buddha", year:-563, school:"Buddhism", region:"East", subregion:"Magadha", work:"Pali Canon", others:["Dhammapada"], note:"The Awakened One."},
             {id:"Mahavira", label:"Mahavira", year:-540, school:"Jainism", region:"East", subregion:"Bihar", work:"Agamas", others:[], note:"24th Tirthankara."},
             {id:"Makkhali", label:"Makkhali Gosala", year:-500, school:"Ajivika", region:"East", subregion:"Magadha", work:"(Lost)", others:[], note:"Founder of Ajivika."},
@@ -463,7 +471,7 @@
 
             {id:"Gaudapada", label:"Gaudapada", year:650, school:"Advaita", region:"South", work:"Mandukya Karika", others:[], note:"Paramaguru of Shankara; foundational text on non-dualism; influenced by Buddhism."},
             {id:"Govinda", label:"Govinda Bhagavatpada", year:725, school:"Advaita", region:"Central", work:"", others:[], note:"Direct guru of Adi Shankara; yogi and teacher."},
-            {id:"Shankara", label:"Adi Shankara", year:788, school:"Advaita", region:"South", subregion:"Kerala", work:"Brahmasutra Bhashya", workUrl:"https://www.wisdomlib.org/hinduism/book/brahma-sutras", others:["Vivekachudamani", "Bhaja Govindam", "Upadesasahasri"], note:"Founder/systematizer of Advaita; established four mathas."},
+            {id:"Shankara", label:"Adi Shankara", wiki:"Adi_Shankara", year:788, school:"Advaita", region:"South", subregion:"Kerala", work:"Brahmasutra Bhashya", workUrl:"https://www.wisdomlib.org/hinduism/book/brahma-sutras", others:["Vivekachudamani", "Bhaja Govindam", "Upadesasahasri"], note:"Founder/systematizer of Advaita; established four mathas."},
             {id:"Suresvara", label:"Suresvara", year:800, school:"Advaita", region:"South", work:"Naishkarmya Siddhi", others:["Brihadaranyaka Vartika"], note:"Direct disciple; first acharya of Sringeri matha; defended Advaita."},
             {id:"Padmapada", label:"Padmapada", year:800, school:"Advaita", region:"East", work:"Panchapadika", others:[], note:"Direct disciple; founder of Vivarana sub-school; linked to Puri matha."},
             {id:"Hastamalaka", label:"Hastamalaka", year:800, school:"Advaita", region:"West", work:"", others:[], note:"Direct disciple; profound simple teachings on self-knowledge."},
@@ -482,7 +490,7 @@
             {id:"DharmarajaAdhvarindra", label:"Dharmaraja Adhvarindra", year:1600, school:"Advaita", region:"South", work:"Vedanta Paribhasa", others:[], note:"Standard epistemology text; pramanas in Advaita."},
             {id:"Nrisimhashrama", label:"Nrisimhashrama", year:1550, school:"Advaita", region:"South", work:"", others:["Commentaries on Advaita texts"], note:"Bridged classical and later Advaita; key commentator."},
             {id:"BrahmanandaSaraswati", label:"Swami Brahmananda Saraswati", year:1871, school:"Advaita", region:"North", work:"", others:["Vedic commentaries"], note:"Shankaracharya of Jyotirmath (1941-1953); guru of Karpatri Maharaj."},
-            {id:"KarpatriMaharaj", label:"Swami Karpatri Maharaj", year:1907, school:"Advaita", region:"North", subregion:"Varanasi", work:"", others:["Ram Rajya Parishad texts"], note:"Dharma Samrat; founder of Akhil Bharatiya Ram Rajya Parishad; guru of Nischalananda."},
+            
             {id:"Sacchidanandendra", label:"Sacchidānandendra Sarasvatī", year:1880, school:"Advaita", region:"South", work:"Vedanta Prakriya Pratyabhijna", others:[], note:"Reformer; emphasized pure Shankara over sub-schools."},
             {id:"RamanaMaharshi", label:"Ramana Maharshi", year:1879, school:"Advaita", region:"South", subregion:"Tamil Nadu", work:"Upadesa Saram", others:["Nan Yar? (Who Am I?)"], note:"Self-inquiry (atma-vicara); direct non-dual realization."},
             {id:"NisargadattaMaharaj", label:"Nisargadatta Maharaj", year:1897, school:"Advaita", region:"West", subregion:"Maharashtra", work:"I Am That", others:[], note:"Radical non-dualism; inquiry into 'I Am'."},
@@ -647,55 +655,101 @@
             {id:"Deussen", label:"Paul Deussen", year:1845, school:"Indology", region:"Global", subregion:"Germany", work:"Sixty Upanishads", others:[], note:"Vedanta."}
         ];
 
-        // --- 2. LINEAGES (The Connections) ---
+        // --- 2. LINEAGES (UPDATED LOGIC) ---
+        // Types: "Lineage (Guru)", "Lineage", "Influence"
         const lineages = [
-            {s:"Shiva", t:"Vasugupta", type:"Divine"}, {s:"Shiva", t:"Shankara", type:"Influence"},
-            {s:"Narayana", t:"Brahma", type:"Lineage"}, {s:"Brahma", t:"Vashishta", type:"Lineage"},
-            {s:"Vashishta", t:"ShaktiRishi", type:"Lineage"}, {s:"ShaktiRishi", t:"Parashara", type:"Lineage"},
-            {s:"Parashara", t:"Vyasa", type:"Lineage"}, {s:"Vyasa", t:"Shuka", type:"Lineage"},
-            {s:"Shuka", t:"Gaudapada", type:"Lineage"}, {s:"Gaudapada", t:"Govinda", type:"Lineage (Guru)"},
-            {s:"Govinda", t:"Shankara", type:"Lineage (Guru)"}, {s:"Shankara", t:"Suresvara", type:"Lineage (Guru)"},
-            {s:"Shankara", t:"Padmapada", type:"Lineage (Guru)"}, {s:"Shankara", t:"Totaka", type:"Lineage (Guru)"},
-            {s:"Shankara", t:"Hastamalaka", type:"Lineage (Guru)"}, {s:"Suresvara", t:"Vacaspati", type:"Lineage"},
-            {s:"Vacaspati", t:"Sarvajnatman", type:"Influence"}, {s:"Padmapada", t:"Prakasatman", type:"Lineage"},
-            {s:"Shankara", t:"Anandagiri", type:"Lineage"}, {s:"Vacaspati", t:"Amalananda", type:"Influence"},
-            {s:"Shankara", t:"BharatiTirtha", type:"Lineage"}, {s:"BharatiTirtha", t:"Vidyaranya", type:"Lineage (Guru)"},
-            {s:"Vidyaranya", t:"SadanandaYogindra", type:"Lineage"}, {s:"Madhusudana", t:"Prakashananda", type:"Influence"},
-            {s:"Shankara", t:"Madhusudana", type:"Lineage"}, {s:"Shankara", t:"Appayya", type:"Lineage"},
-            {s:"Shankara", t:"DharmarajaAdhvarindra", type:"Lineage"}, {s:"Shankara", t:"Nrisimhashrama", type:"Lineage"},
-            {s:"Shankara", t:"BrahmanandaSaraswati", type:"Lineage"}, {s:"BrahmanandaSaraswati", t:"KarpatriMaharaj", type:"Lineage (Guru)"},
-            {s:"KarpatriMaharaj", t:"NischalanandaSaraswati", type:"Lineage (Guru)"}, {s:"Shankara", t:"Sacchidanandendra", type:"Lineage"},
-            {s:"Ramakrishna", t:"Vivekananda", type:"Lineage (Guru)"}, {s:"Vivekananda", t:"RamanaMaharshi", type:"Influence"},
-            {s:"RamanaMaharshi", t:"NisargadattaMaharaj", type:"Influence"}, {s:"Shankara", t:"ChandrashekharaBharati", type:"Lineage"},
-            {s:"ChandrashekharaBharati", t:"AbhinavaVidyatirtha", type:"Lineage (Guru)"}, {s:"AbhinavaVidyatirtha", t:"BharatiTirthaCurrent", type:"Lineage (Guru)"},
+            {s:"Shiva", t:"Vasugupta", type:"Influence"}, 
+            {s:"Shiva", t:"Shankara", type:"Influence"},
+            {s:"Narayana", t:"Brahma", type:"Lineage"}, 
+            {s:"Brahma", t:"Vashishta", type:"Lineage"},
+            {s:"Vashishta", t:"ShaktiRishi", type:"Lineage"}, 
+            {s:"ShaktiRishi", t:"Parashara", type:"Lineage"},
+            {s:"Parashara", t:"Vyasa", type:"Lineage"}, 
+            {s:"Vyasa", t:"Shuka", type:"Lineage"},
+            {s:"Shuka", t:"Gaudapada", type:"Lineage"}, 
+            {s:"Gaudapada", t:"Govinda", type:"Lineage (Guru)"},
+            {s:"Govinda", t:"Shankara", type:"Lineage (Guru)"}, 
+            {s:"Shankara", t:"Suresvara", type:"Lineage (Guru)"},
+            {s:"Shankara", t:"Padmapada", type:"Lineage (Guru)"}, 
+            {s:"Shankara", t:"Totaka", type:"Lineage (Guru)"},
+            {s:"Shankara", t:"Hastamalaka", type:"Lineage (Guru)"}, 
+            {s:"Suresvara", t:"Vacaspati", type:"Lineage"},
+            {s:"Vacaspati", t:"Sarvajnatman", type:"Influence"}, 
+            {s:"Padmapada", t:"Prakasatman", type:"Lineage"},
+            {s:"Shankara", t:"Anandagiri", type:"Lineage"}, 
+            {s:"Vacaspati", t:"Amalananda", type:"Influence"},
+            {s:"Shankara", t:"BharatiTirtha", type:"Lineage"}, 
+            {s:"BharatiTirtha", t:"Vidyaranya", type:"Lineage (Guru)"},
+            {s:"Vidyaranya", t:"SadanandaYogindra", type:"Lineage"}, 
+            {s:"Madhusudana", t:"Prakashananda", type:"Influence"},
+            {s:"Shankara", t:"Madhusudana", type:"Lineage"}, 
+            {s:"Shankara", t:"Appayya", type:"Lineage"},
+            {s:"Shankara", t:"DharmarajaAdhvarindra", type:"Lineage"}, 
+            {s:"Shankara", t:"Nrisimhashrama", type:"Lineage"},
+            {s:"Shankara", t:"BrahmanandaSaraswati", type:"Lineage"}, 
+            {s:"BrahmanandaSaraswati", t:"KarpatriMaharaj", type:"Lineage (Guru)"},
+            {s:"KarpatriMaharaj", t:"NischalanandaSaraswati", type:"Lineage (Guru)"}, 
+            {s:"Shankara", t:"Sacchidanandendra", type:"Lineage"},
+            {s:"Ramakrishna", t:"Vivekananda", type:"Lineage (Guru)"}, 
+            {s:"Vivekananda", t:"RamanaMaharshi", type:"Influence"},
+            {s:"RamanaMaharshi", t:"NisargadattaMaharaj", type:"Influence"}, 
+            {s:"Shankara", t:"ChandrashekharaBharati", type:"Lineage"},
+            {s:"ChandrashekharaBharati", t:"AbhinavaVidyatirtha", type:"Lineage (Guru)"}, 
+            {s:"AbhinavaVidyatirtha", t:"BharatiTirthaCurrent", type:"Lineage (Guru)"},
             {s:"Shankara", t:"NischalanandaSaraswati", type:"Lineage"},
-            {s:"Narayana", t:"Madhva", type:"Divine"}, {s:"Madhva", t:"Padmanabha", type:"Guru"}, 
-            {s:"Padmanabha", t:"Narahari", type:"Guru"}, {s:"Madhva", t:"Jayatirtha", type:"Lineage"}, 
-            {s:"Jayatirtha", t:"Vyasatirtha", type:"Lineage"}, {s:"Vyasatirtha", t:"Raghavendra", type:"Lineage"},
-            {s:"Narayana", t:"Nammalvar", type:"Inspiration"}, {s:"Nammalvar", t:"Nathamuni", type:"Inspiration"},
-            {s:"Nathamuni", t:"Yamuna", type:"GrandGuru"}, {s:"Yamuna", t:"Ramanuja", type:"Preceptor"},
-            {s:"Ramanuja", t:"Desika", type:"Lineage"}, {s:"Ramanuja", t:"Pillai", type:"Lineage"},
-            {s:"Vasugupta", t:"Somananda", type:"Lineage"}, {s:"Somananda", t:"Utpaladeva", type:"Guru"},
-            {s:"Utpaladeva", t:"Abhinavagupta", type:"GrandGuru"}, {s:"Abhinavagupta", t:"Kshemaraja", type:"Guru"},
-            {s:"Abhinavagupta", t:"Lakshmanjoo", type:"Lineage"},
-            {s:"Gautama", t:"Vatsyayana", type:"Lineage"}, {s:"Udayana", t:"Gangesa", type:"Influence"},
-            {s:"Gangesa", t:"Raghunatha", type:"Lineage"}, {s:"Raghunatha", t:"Gadadhara", type:"Lineage"},
-            {s:"Buddha", t:"Mahakassapa", type:"Guru"}, {s:"Mahakassapa", t:"Ananda", type:"Guru"},
-            {s:"Buddha", t:"Nagarjuna", type:"Inspiration"}, {s:"Nagarjuna", t:"Aryadeva", type:"Guru"},
-            {s:"Asanga", t:"Vasubandhu", type:"Brother"}, {s:"Vasubandhu", t:"Dignaga", type:"Lineage"},
-            {s:"Bodhidharma", t:"Huineng", type:"Lineage"}, {s:"Padmasambhava", t:"Milarepa", type:"Lineage"},
-            {s:"Tsongkhapa", t:"DalaiLama", type:"Lineage"},
-            {s:"Mahavira", t:"GautamaGanadhara", type:"Guru"}, {s:"Mahavira", t:"Bhadrabahu", type:"Lineage"},
-            {s:"Bhadrabahu", t:"Kundakunda", type:"Lineage"}, {s:"Mahavira", t:"Hemachandra", type:"Lineage"},
-            {s:"Jaimini", t:"Shabara", type:"Lineage"}, {s:"Shabara", t:"Kumarila", type:"Lineage"},
-            {s:"Kumarila", t:"Mandana", type:"Guru"}, {s:"Kumarila", t:"Prabhakara", type:"Guru"},
-            {s:"Kapila", t:"Asuri", type:"Guru"}, {s:"Asuri", t:"Panchashikha", type:"Guru"},
-            {s:"Panchashikha", t:"IshvaraKrishna", type:"Lineage"},
-            {s:"Ramanuja", t:"Madhva", type:"Reaction"}, {s:"Jayadeva", t:"Chaitanya", type:"Influence"},
-            {s:"Chaitanya", t:"Tagore", type:"Influence"}, {s:"Vivekananda", t:"Nivedita", type:"Guru"},
-            {s:"Panini", t:"Voltaire", type:"Study"}, {s:"Vyasa", t:"Oppenheimer", type:"Study"},
-            {s:"Yajnavalkya", t:"Schopenhauer", type:"Study"}, {s:"Vivekananda", t:"Tesla", type:"Meeting"},
-            {s:"Kalidasa", t:"Goethe", type:"Inspiration"}, {s:"Jones", t:"MaxMuller", type:"Influence"}
+            
+            // Others (Defaulting to simple types)
+            {s:"Narayana", t:"Madhva", type:"Influence"}, 
+            {s:"Madhva", t:"Padmanabha", type:"Lineage (Guru)"}, 
+            {s:"Padmanabha", t:"Narahari", type:"Lineage (Guru)"}, 
+            {s:"Madhva", t:"Jayatirtha", type:"Lineage"}, 
+            {s:"Jayatirtha", t:"Vyasatirtha", type:"Lineage"}, 
+            {s:"Vyasatirtha", t:"Raghavendra", type:"Lineage"}, 
+            {s:"Narayana", t:"Nammalvar", type:"Influence"}, 
+            {s:"Nammalvar", t:"Nathamuni", type:"Influence"}, 
+            {s:"Nathamuni", t:"Yamuna", type:"Lineage"}, 
+            {s:"Yamuna", t:"Ramanuja", type:"Lineage (Guru)"}, 
+            {s:"Ramanuja", t:"Desika", type:"Lineage"}, 
+            {s:"Ramanuja", t:"Pillai", type:"Lineage"}, 
+            {s:"Vasugupta", t:"Somananda", type:"Lineage"}, 
+            {s:"Somananda", t:"Utpaladeva", type:"Lineage (Guru)"}, 
+            {s:"Utpaladeva", t:"Abhinavagupta", type:"Lineage"}, 
+            {s:"Abhinavagupta", t:"Kshemaraja", type:"Lineage (Guru)"}, 
+            {s:"Abhinavagupta", t:"Lakshmanjoo", type:"Lineage"}, 
+            {s:"Gautama", t:"Vatsyayana", type:"Lineage"}, 
+            {s:"Udayana", t:"Gangesa", type:"Influence"}, 
+            {s:"Gangesa", t:"Raghunatha", type:"Lineage"}, 
+            {s:"Raghunatha", t:"Gadadhara", type:"Lineage"}, 
+            {s:"Buddha", t:"Mahakassapa", type:"Lineage (Guru)"}, 
+            {s:"Mahakassapa", t:"Ananda", type:"Lineage (Guru)"}, 
+            {s:"Buddha", t:"Nagarjuna", type:"Influence"}, 
+            {s:"Nagarjuna", t:"Aryadeva", type:"Lineage (Guru)"}, 
+            {s:"Asanga", t:"Vasubandhu", type:"Lineage"}, 
+            {s:"Vasubandhu", t:"Dignaga", type:"Lineage"}, 
+            {s:"Bodhidharma", t:"Huineng", type:"Lineage"}, 
+            {s:"Padmasambhava", t:"Milarepa", type:"Lineage"}, 
+            {s:"Tsongkhapa", t:"DalaiLama", type:"Lineage"}, 
+            {s:"Mahavira", t:"GautamaGanadhara", type:"Lineage (Guru)"}, 
+            {s:"Mahavira", t:"Bhadrabahu", type:"Lineage"}, 
+            {s:"Bhadrabahu", t:"Kundakunda", type:"Lineage"}, 
+            {s:"Mahavira", t:"Hemachandra", type:"Lineage"}, 
+            {s:"Jaimini", t:"Shabara", type:"Lineage"}, 
+            {s:"Shabara", t:"Kumarila", type:"Lineage"}, 
+            {s:"Kumarila", t:"Mandana", type:"Lineage (Guru)"}, 
+            {s:"Kumarila", t:"Prabhakara", type:"Lineage (Guru)"}, 
+            {s:"Kapila", t:"Asuri", type:"Lineage (Guru)"}, 
+            {s:"Asuri", t:"Panchashikha", type:"Lineage (Guru)"}, 
+            {s:"Panchashikha", t:"IshvaraKrishna", type:"Lineage"}, 
+            {s:"Ramanuja", t:"Madhva", type:"Influence"}, 
+            {s:"Jayadeva", t:"Chaitanya", type:"Influence"}, 
+            {s:"Chaitanya", t:"Tagore", type:"Influence"}, 
+            {s:"Vivekananda", t:"Nivedita", type:"Lineage (Guru)"}, 
+            {s:"Panini", t:"Voltaire", type:"Influence"}, 
+            {s:"Vyasa", t:"Oppenheimer", type:"Influence"}, 
+            {s:"Yajnavalkya", t:"Schopenhauer", type:"Influence"}, 
+            {s:"Vivekananda", t:"Tesla", type:"Influence"}, 
+            {s:"Kalidasa", t:"Goethe", type:"Influence"}, 
+            {s:"Jones", t:"MaxMuller", type:"Influence"}
         ];
 
         // --- NETWORK SETUP ---
@@ -712,13 +766,7 @@
                 shape: 'dot',
                 size: 20,
                 borderWidth: 2,
-                shadow: {
-                    enabled: true,
-                    color: 'rgba(0,0,0,0.5)',
-                    size: 10,
-                    x: 5,
-                    y: 5
-                },
+                shadow: { enabled: true, color: 'rgba(0,0,0,0.5)', size: 10, x: 5, y: 5 },
                 font: { 
                     face: 'Cinzel', 
                     color: '#ffffff',
@@ -728,59 +776,22 @@
                     align: 'center',
                     vadjust: -35 
                 },
-                color: {
-                    border: '#333',
-                    background: '#222',
-                    highlight: { border: '#d4af37', background: '#444' }
-                }
+                color: { border: '#333', background: '#222', highlight: { border: '#d4af37', background: '#444' } }
             },
             edges: {
                 width: 1,
                 selectionWidth: 2,
-                smooth: {
-                    type: "continuous",
-                    forceDirection: "none",
-                    roundness: 0.4
-                },
-                arrows: { 
-                    to: { scaleFactor: 0.5 } 
-                },
-                color: { 
-                    color: '#444', 
-                    highlight: '#d4af37', 
-                    opacity: 0.4 
-                },
-                font: { 
-                    face: 'Noto Serif', 
-                    size: 9, 
-                    color: '#666',
-                    strokeWidth: 3, 
-                    strokeColor: '#050505',
-                    align: 'middle'
-                }
+                smooth: { type: "continuous", forceDirection: "none", roundness: 0.4 },
+                arrows: { to: { scaleFactor: 0.5 } },
+                color: { color: '#444', highlight: '#d4af37', opacity: 0.4 },
+                font: { face: 'Noto Serif', size: 9, color: '#666', strokeWidth: 3, strokeColor: '#050505', align: 'middle' }
             },
             physics: {
                 enabled: true,
-                stabilization: {
-                    enabled: true,
-                    iterations: 1500, 
-                    updateInterval: 50
-                },
-                barnesHut: {
-                    gravitationalConstant: -10000, 
-                    centralGravity: 0.2,
-                    springLength: 250, 
-                    springConstant: 0.02,
-                    damping: 0.09,
-                    avoidOverlap: 1
-                }
+                stabilization: { enabled: true, iterations: 1500, updateInterval: 50 },
+                barnesHut: { gravitationalConstant: -10000, centralGravity: 0.2, springLength: 250, springConstant: 0.02, damping: 0.09, avoidOverlap: 1 }
             },
-            interaction: { 
-                hover: true, 
-                tooltipDelay: 200, 
-                hideEdgesOnDrag: true,
-                zoomView: true
-            }
+            interaction: { hover: true, tooltipDelay: 200, hideEdgesOnDrag: true, zoomView: true }
         };
 
         const network = new vis.Network(container, data, options);
@@ -812,15 +823,11 @@
                 if (!seenIds.has(item.id)) {
                     seenIds.add(item.id);
                     uniqueData.push(item);
-                } else {
-                    console.warn("Duplicate ID removed:", item.id);
                 }
             });
 
             uniqueData.forEach(p => {
                 let schoolColor = p.school ? getColor(p.school) : "#ddd";
-                
-                // DEITY SPECIFIC VISUALS
                 let finalColor = { background: schoolColor, border: '#333' };
                 let finalShape = 'dot';
                 let finalSize = 20;
@@ -828,16 +835,8 @@
 
                 if (p.isDeity) {
                     finalShape = 'star';
-                    finalColor = { 
-                        background: '#e0f7fa',  
-                        border: '#00ffff'       
-                    };
-                    finalShadow = { 
-                        enabled: true, 
-                        color: '#00ffff',       
-                        size: 20, 
-                        x: 0, y: 0 
-                    };
+                    finalColor = { background: '#e0f7fa', border: '#00ffff' };
+                    finalShadow = { enabled: true, color: '#00ffff', size: 20, x: 0, y: 0 };
                     finalSize = 30;
                 }
 
@@ -862,18 +861,18 @@
                 if (!t && seenIds.has(l.t)) t = {id: l.t};
 
                 if (s && t) {
-                    let color = (l.type === "Lineage (Guru)" || l.type === "Guru") ? "#d4af37" : "#555";
-                    let dashes = (l.type !== "Lineage (Guru)" && l.type !== "Guru");
+                    // Logic: "Lineage (Guru)" = Solid Line, others = Dashed
+                    let dashes = (l.type !== "Lineage (Guru)");
+                    let color = (l.type === "Lineage (Guru)") ? "#d4af37" : "#555";
                     
-                    let labelText = ""; 
-
                     allEdges.push({
                         from: l.s,
                         to: l.t,
                         arrows: "to",
                         color: { color: color, opacity: 0.6 },
                         dashes: dashes,
-                        label: labelText
+                        label: l.type, // Shows label on line
+                        font: { size: 9, color: '#777', strokeWidth: 0, align: 'middle' }
                     });
                 }
             });
@@ -912,7 +911,6 @@
             });
 
             let visibleIds = new Set();
-
             if (sFilter === 'all' && rFilter === 'all') {
                 allNodes.forEach(n => visibleIds.add(n.id));
             } else {
@@ -966,151 +964,143 @@
             }
         });
 
-    function openPanel(d) {
-        document.getElementById('p-name').innerText = d.iast || d.label;
-        document.getElementById('p-dates').innerText = d.isDeity ? "Divine / Timeless" : 
-            (d.year < 0 ? Math.abs(d.year) + " BCE" : d.year + " CE");
-        document.getElementById('p-school').innerText = d.school || "";
-        document.getElementById('p-region').innerText = (d.region || "") + (d.subregion ? ` (${d.subregion})` : "");
+        function openPanel(d) {
+            document.getElementById('p-name').innerText = d.iast || d.label;
+            document.getElementById('p-dates').innerText = d.isDeity ? "Divine / Timeless" : 
+                (d.year < 0 ? Math.abs(d.year) + " BCE" : d.year + " CE");
+            document.getElementById('p-school').innerText = d.school || "";
+            document.getElementById('p-region').innerText = (d.region || "") + (d.subregion ? ` (${d.subregion})` : "");
 
-        const workEl = document.getElementById('p-work');
-        if (d.work && d.workUrl) {
-            workEl.innerHTML = `<a href="${d.workUrl}" target="_blank" class="opus-link">${d.work} ↗</a>`;
-        } else {
-            workEl.innerText = d.work || "N/A";
-        }
-
-        document.getElementById('p-note').innerText = d.note || "";
-        
-        // --- WIKI BUTTON LOGIC ---
-        const wikiBtn = document.getElementById('p-wiki');
-        // Simple heuristic: Name + School usually finds the right Wiki page
-        const wikiName = d.label.replace(/\s+/g, '_');
-        wikiBtn.href = `https://en.wikipedia.org/wiki/${wikiName}`;
-        
-        let parent = lineages.find(l => l.t === d.id); 
-        let lineageText = "Source / Independent";
-        if (parent) {
-            if (parent.type === "Lineage (Guru)") lineageText = `Disciple of ${parent.s}`;
-            else if (parent.type === "Lineage") lineageText = `In Lineage of ${parent.s}`;
-            else if (parent.type === "Influence") lineageText = `Influenced by ${parent.s}`;
-            else lineageText = `${parent.type} of ${parent.s}`; 
-        }
-        document.getElementById('p-lineage').innerText = lineageText;
-
-        const ul = document.getElementById('p-others');
-        ul.innerHTML = "";
-        if (d.others && d.others.length > 0) d.others.forEach(w => ul.innerHTML += `<li>${w}</li>`);
-        else ul.innerHTML = "<li>No other major records listed.</li>";
-
-        document.getElementById('side-panel').style.width = "400px";
-        document.getElementById('panel-content').style.opacity = "1";
-    }
-
-    network.on("click", function(params) {
-        if (params.nodes.length > 0) {
-            const nodeId = params.nodes[0];
-            const node = nodes.get(nodeId);
-            if (node) {
-                openPanel(node.data);
-                if (!node.data.isDeity) {
-                    const tItem = timelineData.get({ filter: i => i.personId === node.id });
-                    if (tItem.length) timeline.moveTo(tItem[0].start);
-                }
+            const workEl = document.getElementById('p-work');
+            if (d.work && d.workUrl) {
+                workEl.innerHTML = `<a href="${d.workUrl}" target="_blank" class="opus-link">${d.work} ↗</a>`;
+            } else {
+                workEl.innerText = d.work || "N/A";
             }
-        } else {
-            document.getElementById('side-panel').style.width = "0";
-            document.getElementById('panel-content').style.opacity = "0";
+
+            document.getElementById('p-note').innerText = d.note || "";
+            
+            // Wiki Button Logic
+            const wikiBtn = document.getElementById('p-wiki');
+            const wikiSlug = d.wiki || d.label.replace(/\s+/g, '_');
+            wikiBtn.href = `https://en.wikipedia.org/wiki/${wikiSlug}`;
+            
+            let parent = lineages.find(l => l.t === d.id); 
+            let lineageText = "Source / Independent";
+            if (parent) {
+                lineageText = `${parent.type} of ${parent.s}`; 
+            }
+            document.getElementById('p-lineage').innerText = lineageText;
+
+            const ul = document.getElementById('p-others');
+            ul.innerHTML = "";
+            if (d.others && d.others.length > 0) d.others.forEach(w => ul.innerHTML += `<li>${w}</li>`);
+            else ul.innerHTML = "<li>No other major records listed.</li>";
+
+            document.getElementById('side-panel').style.width = "400px";
+            document.getElementById('panel-content').style.opacity = "1";
         }
-    });
 
-    // --- SEARCH LOGIC (AUTOCOMPLETE) ---
-    const searchInput = document.getElementById('search');
-    const searchResults = document.getElementById('search-results');
+        network.on("click", function(params) {
+            if (params.nodes.length > 0) {
+                const nodeId = params.nodes[0];
+                const node = nodes.get(nodeId);
+                if (node) {
+                    openPanel(node.data);
+                    if (!node.data.isDeity) {
+                        const tItem = timelineData.get({ filter: i => i.personId === node.id });
+                        if (tItem.length) timeline.moveTo(tItem[0].start);
+                    }
+                }
+            } else {
+                document.getElementById('side-panel').style.width = "0";
+                document.getElementById('panel-content').style.opacity = "0";
+            }
+        });
 
-    searchInput.addEventListener('input', function(e) {
-        const query = e.target.value.toLowerCase();
-        searchResults.innerHTML = '';
-        
-        if (query.length < 2) {
-            searchResults.style.display = 'none';
-            return;
-        }
+        // --- SEARCH LOGIC (AUTOCOMPLETE + CATEGORY) ---
+        const searchInput = document.getElementById('search');
+        const searchResults = document.getElementById('search-results');
 
-        const matches = allNodes.filter(n => n.label.toLowerCase().includes(query));
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            searchResults.innerHTML = '';
+            
+            if (query.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
 
-        if (matches.length > 0) {
-            searchResults.style.display = 'flex';
-            matches.forEach(match => {
-                const item = document.createElement('div');
-                item.className = 'search-item';
-                item.innerText = match.label;
-                item.onclick = () => {
-                    // Trigger selection
-                    document.getElementById('schoolFilter').value = 'all';
-                    document.getElementById('regionFilter').value = 'all';
-                    updateGraph();
-                    setTimeout(() => {
-                        network.selectNodes([match.id]);
-                        network.focus(match.id, { scale: 1.5, animation: true });
-                        openPanel(match.data);
-                    }, 100);
-                    // Clear search
-                    searchResults.style.display = 'none';
-                    searchInput.value = '';
-                };
-                searchResults.appendChild(item);
-            });
-        } else {
-            searchResults.style.display = 'none';
-        }
-    });
+            const matches = allNodes.filter(n => 
+                n.label.toLowerCase().includes(query) || 
+                (n.data.school && n.data.school.toLowerCase().includes(query))
+            );
 
-    // Hide search results if clicking elsewhere
-    document.addEventListener('click', function(e) {
-        if (e.target !== searchInput && e.target !== searchResults) {
-            searchResults.style.display = 'none';
-        }
-    });
+            if (matches.length > 0) {
+                searchResults.style.display = 'flex';
+                matches.forEach(match => {
+                    const item = document.createElement('div');
+                    item.className = 'search-item';
+                    
+                    // Show Name + School
+                    item.innerHTML = `<span>${match.label}</span><span class="meta">${match.data.school || ''}</span>`;
+                    
+                    item.onclick = () => {
+                        document.getElementById('schoolFilter').value = 'all';
+                        document.getElementById('regionFilter').value = 'all';
+                        updateGraph();
+                        setTimeout(() => {
+                            network.selectNodes([match.id]);
+                            network.focus(match.id, { scale: 1.5, animation: true });
+                            openPanel(match.data);
+                        }, 100);
+                        searchResults.style.display = 'none';
+                        searchInput.value = '';
+                    };
+                    searchResults.appendChild(item);
+                });
+            } else {
+                searchResults.style.display = 'none';
+            }
+        });
 
-    // Keeping the old Enter key logic as fallback
-    function searchNode(e) {
-        if (e.key === 'Enter') {
-            // ... (Same logic as click) ...
-        }
-    }
+        document.addEventListener('click', function(e) {
+            if (e.target !== searchInput && e.target !== searchResults) {
+                searchResults.style.display = 'none';
+            }
+        });
 
-    const gutter = document.getElementById('drag-gutter');
-    const timelineDiv = document.getElementById('mytimeline');
-    let isDragging = false;
-    let startY, startHeight;
+        const gutter = document.getElementById('drag-gutter');
+        const timelineDiv = document.getElementById('mytimeline');
+        let isDragging = false;
+        let startY, startHeight;
 
-    gutter.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startY = e.clientY;
-        startHeight = timelineDiv.offsetHeight;
-        document.body.style.cursor = 'ns-resize'; 
-        document.body.style.userSelect = 'none'; 
-    });
+        gutter.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startY = e.clientY;
+            startHeight = timelineDiv.offsetHeight;
+            document.body.style.cursor = 'ns-resize'; 
+            document.body.style.userSelect = 'none'; 
+        });
 
-    window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const deltaY = startY - e.clientY;
-        const newHeight = startHeight + deltaY;
-        if (newHeight > 50 && newHeight < window.innerHeight * 0.8) {
-            timelineDiv.style.height = newHeight + 'px';
-        }
-    });
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const deltaY = startY - e.clientY;
+            const newHeight = startHeight + deltaY;
+            if (newHeight > 50 && newHeight < window.innerHeight * 0.8) {
+                timelineDiv.style.height = newHeight + 'px';
+            }
+        });
 
-    window.addEventListener('mouseup', () => {
-        if (isDragging) {
-            isDragging = false;
-            document.body.style.cursor = '';
-            document.body.style.userSelect = '';
-            network.redraw();
-            timeline.redraw();
-        }
-    });
+        window.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+                network.redraw();
+                timeline.redraw();
+            }
+        });
     </script>
 </body>
 </html>
