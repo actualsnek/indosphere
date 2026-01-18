@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Indosphere: The Grand Archive</title>
+    <meta property="og:title" content="Indosphere: The Grand Archive">
+    <meta property="og:description" content="Interactive lineage of Indian philosophy and history.">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400&family=Noto+Serif:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -49,6 +52,7 @@
             color: var(--gold);
             font-weight: 700;
             text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            cursor: pointer;
         }
 
         .controls {
@@ -58,7 +62,7 @@
             position: relative;
         }
 
-        select, input {
+        select, input, .btn {
             background: #1a1a1a;
             color: #fff;
             border: 1px solid #666;
@@ -68,16 +72,17 @@
             border-radius: 4px;
             outline: none;
             transition: 0.3s;
-            min-width: 150px;
         }
 
-        select:hover, input:focus, input:hover {
+        select, input { min-width: 150px; }
+
+        .btn { cursor: pointer; text-transform: uppercase; }
+
+        select:hover, input:focus, .btn:hover {
             border-color: var(--gold);
             background: #222;
             box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
         }
-
-        ::placeholder { color: #888; opacity: 1; }
 
         #search-results {
             position: absolute;
@@ -106,16 +111,10 @@
             justify-content: space-between;
         }
 
-        .search-item span.meta {
-            font-size: 0.7rem;
-            color: var(--gold);
-            font-style: italic;
-        }
+        .search-item.empty { cursor: default; color: #666; font-style: italic; }
 
-        .search-item:hover {
-            background: var(--gold);
-            color: #000;
-        }
+        .search-item:hover:not(.empty) { background: var(--gold); color: #000; }
+        .search-item span.meta { font-size: 0.7rem; color: var(--gold); font-style: italic; }
         .search-item:hover span.meta { color: #222; }
 
         /* --- MAIN AREA --- */
@@ -131,20 +130,50 @@
             width: 100%;
             height: 100%;
             background: radial-gradient(circle at 50% 50%, #161616 0%, #050505 100%);
+            cursor: grab; /* Default cursor */
+        }
+        #network:active { cursor: grabbing; }
+
+        /* --- TIMELINE AREA --- */
+        #timeline-container {
+            position: relative;
+            z-index: 20;
+            flex-shrink: 0;
         }
 
-        /* --- TIMELINE --- */
+        /* Timeline Navigation Buttons */
+        .timeline-nav {
+            position: absolute;
+            top: -30px; /* Float above timeline */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 3000;
+        }
+
+        .time-btn {
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #444;
+            color: #888;
+            padding: 4px 10px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.6rem;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: 0.2s;
+        }
+        .time-btn:hover { border-color: var(--gold); color: var(--gold); }
+
         #drag-gutter {
             height: 12px;
             background: #0f0f0f;
             border-top: 1px solid #333;
             box-shadow: 0 -10px 20px rgba(0,0,0,1);
             cursor: ns-resize;
-            z-index: 3000;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-shrink: 0;
             position: relative;
         }
 
@@ -160,12 +189,10 @@
         #mytimeline {
             height: 200px; 
             background: #080808;
-            z-index: 20;
-            position: relative;
             width: 100%;
-            flex-shrink: 0;
         }
 
+        /* Timeline Styles */
         .vis-item.vis-point {
             background: transparent !important;
             border: none !important;
@@ -182,34 +209,22 @@
             box-shadow: 0 0 8px rgba(0,0,0,1);
             top: 5px;
         }
-        .vis-item.vis-point:hover {
-            color: #fff !important;
-            z-index: 100;
-            transform: translateY(-2px);
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
-        }
-        .vis-item.vis-point:hover .vis-dot {
-            background-color: inherit;
-            transform: scale(1.5);
-            box-shadow: 0 0 15px currentColor;
-        }
+        .vis-item.vis-point:hover { color: #fff !important; z-index: 100; transform: translateY(-2px); }
+        .vis-item.vis-point:hover .vis-dot { transform: scale(1.5); box-shadow: 0 0 15px currentColor; }
         .vis-item.vis-selected { color: var(--gold) !important; }
-        .vis-item.vis-selected .vis-dot {
-            background-color: var(--gold) !important;
-            border-color: #fff !important;
-            box-shadow: 0 0 20px var(--gold);
-        }
+        .vis-item.vis-selected .vis-dot { background-color: var(--gold) !important; border-color: #fff !important; }
+        
         .vis-time-axis .vis-text { color: #555; font-family: 'Cinzel', serif; font-size: 0.7rem; }
         .vis-time-axis .vis-grid.vis-minor { border-color: #1a1a1a; }
         .vis-time-axis .vis-grid.vis-major { border-color: #222; }
 
-        /* --- SIDE PANEL --- */
+        /* --- SIDE PANEL (RESPONSIVE) --- */
         #side-panel {
             width: 0;
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(10px);
             border-left: 1px solid var(--border);
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-y: auto;
             z-index: 5000;
             position: fixed;
@@ -217,6 +232,24 @@
             top: 70px;
             bottom: 0;
             box-shadow: -10px 0 50px rgba(0, 0, 0, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            #side-panel {
+                width: 100% !important; /* Full width on mobile */
+                height: 0; /* Animated height instead of width */
+                top: auto;
+                bottom: 0;
+                border-left: none;
+                border-top: 1px solid var(--gold);
+                right: 0; left: 0;
+            }
+            #side-panel.open {
+                height: 70% !important; /* Slide up 70% */
+            }
+            /* Hide controls on mobile initially for simplicity, or stack them */
+            .controls { display: none; } 
+            header { justify-content: center; }
         }
 
         .panel-content {
@@ -228,6 +261,15 @@
             flex-direction: column;
         }
 
+        .close-btn {
+            position: absolute;
+            top: 20px; right: 20px;
+            color: #666;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        .close-btn:hover { color: #fff; }
+
         .p-title {
             font-family: 'Cinzel', serif;
             font-size: 1.8rem;
@@ -237,119 +279,86 @@
             margin-bottom: 15px;
             line-height: 1.2;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .p-label {
-            color: #666;
-            font-family: 'Cinzel', serif;
-            font-size: 0.65rem;
-            letter-spacing: 2px;
-            margin-top: 25px;
-            display: block;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .p-value {
-            font-size: 1rem;
-            color: #ddd;
-            line-height: 1.6;
-            margin-top: 5px;
-            font-weight: 300;
-        }
-
-        .religion-tag {
-            font-family: 'Cinzel', serif;
-            color: var(--divine);
-            font-size: 0.8rem;
-            margin-top: -10px;
-            margin-bottom: 20px;
-            text-shadow: 0 0 5px var(--glow);
-        }
-
+        .p-label { color: #666; font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 2px; margin-top: 25px; display: block; font-weight: 700; text-transform: uppercase; }
+        .p-value { font-size: 1rem; color: #ddd; line-height: 1.6; margin-top: 5px; font-weight: 300; }
+        .religion-tag { font-family: 'Cinzel', serif; color: var(--divine); font-size: 0.8rem; margin-top: -10px; margin-bottom: 20px; text-shadow: 0 0 5px var(--glow); }
         .iast { font-style: italic; color: #e6c673; }
-
         .works-list { margin-top: 10px; padding-left: 0; list-style: none; }
         .works-list li { margin-bottom: 6px; color: #bbb; font-size: 0.9rem; position: relative; padding-left: 15px; }
         .works-list li::before { content: "•"; color: var(--gold); position: absolute; left: 0; }
         
-        .opus-link {
-            color: var(--gold);
-            text-decoration: none;
-            border-bottom: 1px dotted var(--gold); 
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
+        .opus-link { color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold); transition: all 0.2s ease; cursor: pointer; }
         .opus-link:hover { color: #fff; border-bottom: 1px solid #fff; }
 
         .wiki-btn {
-            margin-top: 30px;
-            display: inline-block;
-            text-align: center;
-            padding: 10px 20px;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            text-decoration: none;
-            font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-            border-radius: 2px;
+            margin-top: 30px; display: inline-block; text-align: center; padding: 10px 20px; border: 1px solid var(--gold);
+            color: var(--gold); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.8rem; text-transform: uppercase;
+            letter-spacing: 1px; transition: all 0.3s; border-radius: 2px;
         }
         .wiki-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
 
-        /* --- LEGEND (With Counter) --- */
+        /* --- MODAL --- */
+        #welcome-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+            z-index: 9999; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+        }
+        #welcome-modal.active { opacity: 1; pointer-events: auto; }
+        
+        .modal-box {
+            background: #111; border: 1px solid var(--gold);
+            padding: 40px; max-width: 500px; text-align: center;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+            border-radius: 4px;
+        }
+        .modal-title { font-family: 'Cinzel', serif; font-size: 2rem; color: var(--gold); margin-bottom: 10px; }
+        .modal-desc { color: #ccc; font-size: 1rem; line-height: 1.6; margin-bottom: 30px; }
+        .enter-btn {
+            background: var(--gold); color: #000; padding: 12px 30px;
+            font-family: 'Cinzel', serif; font-weight: bold; font-size: 1rem;
+            cursor: pointer; border: none; transition: 0.3s;
+        }
+        .enter-btn:hover { background: #fff; box-shadow: 0 0 20px #fff; }
+
+        /* --- LEGEND --- */
         .legend {
-            position: absolute;
-            bottom: 30px;
-            left: 30px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column; 
-            gap: 12px; 
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #bbb;
-            padding: 15px 20px; 
-            border-radius: 8px;
-            font-size: 0.75rem;
-            backdrop-filter: blur(8px);
-            pointer-events: none;
-            min-width: 120px;
-            font-family: 'Cinzel', serif;
-            letter-spacing: 1px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: absolute; bottom: 30px; left: 30px; z-index: 1000;
+            display: flex; flex-direction: column; gap: 12px;
+            background: rgba(0, 0, 0, 0.6); border: 1px solid #333;
+            color: #bbb; padding: 15px 20px; border-radius: 8px;
+            font-size: 0.75rem; backdrop-filter: blur(8px);
+            min-width: 120px; font-family: 'Cinzel', serif; letter-spacing: 1px;
         }
         .legend-item { display: flex; align-items: center; gap: 12px; }
         .symbol-star { font-size: 1.4rem; color: var(--divine); text-shadow: 0 0 10px var(--glow); line-height: 0.8; }
         .symbol-dot { width: 8px; height: 8px; background-color: #fff; border-radius: 50%; box-shadow: 0 0 5px rgba(255,255,255,0.5); }
         .symbol-line { width: 25px; height: 1px; background-color: #888; }
-        
-        #total-counter {
-            margin-top: 5px;
-            padding-top: 10px;
-            border-top: 1px solid #444;
-            color: var(--gold);
-            font-size: 0.7rem;
-            text-align: center;
-        }
+        #total-counter { margin-top: 5px; padding-top: 10px; border-top: 1px solid #444; color: var(--gold); font-size: 0.7rem; text-align: center; }
     </style>
 </head>
 
 <body>
+    <div id="welcome-modal" class="active">
+        <div class="modal-box">
+            <div class="modal-title">Indosphere</div>
+            <div class="modal-desc">The Grand Archive of Indian Tradition.<br><br>Explore the lineage of Gods, Sages, and Philosophers through time.<br><br>• <strong>Scroll</strong> to Zoom<br>• <strong>Drag</strong> to Pan<br>• <strong>Click</strong> to Explore</div>
+            <button class="enter-btn" onclick="enterSite()">Enter Archive</button>
+        </div>
+    </div>
+
     <header>
-        <div class="brand">Indosphere</div>
+        <div class="brand" onclick="location.reload()">Indosphere</div>
         <div class="controls">
+            <button class="btn" onclick="toggleClusters()" id="clusterBtn">Cluster: Off</button>
             <select id="schoolFilter" onchange="updateGraph()">
                 <option value="all">All Traditions</option>
                 <optgroup label="Vedanta">
                     <option value="Advaita">Advaita</option>
                     <option value="Dvaita">Dvaita</option>
                     <option value="Vishishtadvaita">Vishishtadvaita</option>
-                    <option value="Dvaitadvaita">Dvaitadvaita</option>
-                    <option value="Shuddhadvaita">Shuddhadvaita</option>
                 </optgroup>
                 <optgroup label="Hindu Philosophy">
                     <option value="Nyaya">Nyaya</option>
@@ -358,23 +367,15 @@
                     <option value="Yoga">Yoga</option>
                     <option value="Mimamsa">Mimamsa</option>
                     <option value="Kashmir Shaivism">Kashmir Shaivism</option>
-                    <option value="Shaiva">Shaiva</option>
                     <option value="Bhakti">Bhakti</option>
                 </optgroup>
-                <optgroup label="Buddhism">
-                    <option value="Theravada">Theravada</option>
-                    <option value="Mahayana">Mahayana</option>
-                    <option value="Vajrayana">Vajrayana</option>
-                    <option value="Zen">Zen</option>
-                </optgroup>
                 <optgroup label="Heterodox">
+                    <option value="Buddhism">Buddhism</option>
                     <option value="Jainism">Jainism</option>
                     <option value="Charvaka">Charvaka</option>
-                    <option value="Ajivika">Ajivika</option>
                 </optgroup>
                 <optgroup label="Other">
                     <option value="Indology">Indology</option>
-                    <option value="Literature">Literature</option>
                     <option value="Science">Science</option>
                     <option value="Modern">Modern Reformers</option>
                 </optgroup>
@@ -384,10 +385,8 @@
                 <option value="all">All Regions</option>
                 <option value="North">North India</option>
                 <option value="South">South India</option>
-                <option value="East">East (Bengal/Bihar)</option>
-                <option value="West">West (Gujarat/Maha)</option>
-                <option value="Central">Central India</option>
-                <option value="Global">Global / West</option>
+                <option value="East">East India</option>
+                <option value="West">West India</option>
             </select>
 
             <div style="position:relative;">
@@ -408,6 +407,7 @@
         </div>
 
         <div id="side-panel">
+            <div class="close-btn" onclick="closePanel()">×</div>
             <div class="panel-content" id="panel-content">
                 <div id="p-name" class="p-title"></div>
                 <div id="p-religion" class="religion-tag"></div> 
@@ -444,9 +444,16 @@
         </div>
     </div>
 
-    <div id="drag-gutter" title="Drag to resize"></div>
-
-    <div id="mytimeline"></div>
+    <div id="timeline-container">
+        <div class="timeline-nav">
+            <button class="time-btn" onclick="jumpToDate(-3000)">Vedic</button>
+            <button class="time-btn" onclick="jumpToDate(-500)">Classical</button>
+            <button class="time-btn" onclick="jumpToDate(800)">Bhakti/Medieval</button>
+            <button class="time-btn" onclick="jumpToDate(1900)">Modern</button>
+        </div>
+        <div id="drag-gutter" title="Drag to resize"></div>
+        <div id="mytimeline"></div>
+    </div>
 
     <script type="text/javascript">
         // --- DATA SECTION ---
@@ -466,7 +473,7 @@
             {id:"Indra", label:"Indra", group:"Deity", region:"Divine", isDeity:true, note:"King of Gods; Vedic deity of rain and thunder.", religion:"[Hinduism]", otherNames:"Sakra, Devendra", attributes:"Vajra (Thunderbolt), Elephant Airavata"},
             {id:"Varuna", label:"Varuna", group:"Deity", region:"Divine", isDeity:true, note:"God of Waters; Vedic deity of cosmic order.", religion:"[Hinduism]", otherNames:"Lord of Waters", attributes:"Noose (Pasha), Makara"},
 
-            // PEOPLE (Rishis, Philosophers, etc.)
+            // HUMANS
             {id:"ShaktiRishi", label:"Shakti (Rishi)", year:-2500, displayDate:"c. 2500 BCE", school:"Vedas", region:"North", others:[], note:"Son of Vashishta; Father of Parashara."},
             {id:"Dhanvantari", label:"Dhanvantari", year:-3000, displayDate:"Mythological / Vedic", school:"Ayurveda", region:"Vedic", work:"Ayurveda", others:["Dhanvantari Nighantu"], note:"God of Medicine."},
             {id:"Vashishta", label:"Vashishta", year:-3000, displayDate:"c. 3000 BCE", school:"Vedas", region:"North", work:"Mandala 7 of the Rigveda", others:["Yoga Vashishta"], note:"saptarishih."},
@@ -664,8 +671,7 @@
             {id:"Deussen", label:"Paul Deussen", year:1845, displayDate:"1845–1919", school:"Indology", region:"Global", subregion:"Germany", work:"Sixty Upanishads", others:[], note:"Vedanta."}
         ];
 
-        // --- 2. LINEAGES (The Connections) ---
-        // Types: "Lineage (Guru)", "Lineage", "Influence"
+        // --- LINEAGES ---
         const lineages = [
             {s:"Shiva", t:"Vasugupta", type:"Influence"}, 
             {s:"Shiva", t:"Shankara", type:"Influence"},
@@ -760,55 +766,30 @@
             {s:"Jones", t:"MaxMuller", type:"Influence"}
         ];
 
-        // --- NETWORK SETUP ---
+        // --- 3. LOGIC ---
         let nodes = new vis.DataSet([]);
         let edges = new vis.DataSet([]);
         let allNodes = [];
         let allEdges = [];
+        let network;
 
-        const container = document.getElementById('network');
-        const data = { nodes: nodes, edges: edges };
+        function enterSite() {
+            document.getElementById('welcome-modal').classList.remove('active');
+            // Check for Deep Link
+            const urlParams = new URLSearchParams(window.location.search);
+            const startId = urlParams.get('id');
+            if (startId) {
+                setTimeout(() => {
+                    const node = allNodes.find(n => n.id === startId);
+                    if (node) {
+                        network.selectNodes([startId]);
+                        openPanel(node.data);
+                        network.focus(startId, { scale: 1.5, animation: true });
+                    }
+                }, 1000);
+            }
+        }
 
-        const options = {
-            nodes: {
-                shape: 'dot',
-                size: 20,
-                borderWidth: 2,
-                shadow: { enabled: true, color: 'rgba(0,0,0,0.5)', size: 10, x: 5, y: 5 },
-                font: { 
-                    face: 'Cinzel', 
-                    color: '#ffffff',
-                    size: 16,
-                    strokeWidth: 5, 
-                    strokeColor: '#050505', 
-                    align: 'center',
-                    vadjust: -35 
-                },
-                color: { border: '#333', background: '#222', highlight: { border: '#d4af37', background: '#444' } }
-            },
-            edges: {
-                width: 1,
-                selectionWidth: 2,
-                smooth: { type: "continuous", forceDirection: "none", roundness: 0.4 },
-                arrows: { to: { scaleFactor: 0.5 } },
-                color: { color: '#444', highlight: '#d4af37', opacity: 0.4 },
-                font: { face: 'Noto Serif', size: 9, color: '#666', strokeWidth: 3, strokeColor: '#050505', align: 'middle' }
-            },
-            physics: {
-                enabled: true,
-                stabilization: { enabled: true, iterations: 1500, updateInterval: 50 },
-                barnesHut: { gravitationalConstant: -10000, centralGravity: 0.2, springLength: 250, springConstant: 0.02, damping: 0.09, avoidOverlap: 1 }
-            },
-            interaction: { hover: true, tooltipDelay: 200, hideEdgesOnDrag: true, zoomView: true }
-        };
-
-        const network = new vis.Network(container, data, options);
-
-        network.on("stabilizationIterationsDone", function () {
-            network.setOptions({ physics: false });
-        });
-
-        // COLOR MAPPING
         function getColor(school) {
             if (!school) return "#666";
             if (school.includes('Advaita')) return "#ff9800";
@@ -823,84 +804,133 @@
             return "#ddd";
         }
 
-        // INITIAL DATA PROCESSING
-        if (typeof rawData !== 'undefined') {
-            const seenIds = new Set();
-            const uniqueData = [];
-            rawData.forEach(item => {
-                if (!seenIds.has(item.id)) {
-                    seenIds.add(item.id);
-                    uniqueData.push(item);
-                }
+        // INIT
+        const seenIds = new Set();
+        const uniqueData = [];
+        rawData.forEach(item => {
+            if (!seenIds.has(item.id)) {
+                seenIds.add(item.id);
+                uniqueData.push(item);
+            }
+        });
+        document.getElementById('total-counter').innerText = `Total Archived: ${uniqueData.length}`;
+
+        uniqueData.forEach(p => {
+            let schoolColor = p.school ? getColor(p.school) : "#ddd";
+            let finalColor = { background: schoolColor, border: '#333' };
+            let finalShape = 'dot';
+            let finalSize = 20;
+            let finalShadow = { enabled: true, color: 'rgba(0,0,0,0.5)', size: 10 };
+
+            if (p.isDeity) {
+                finalShape = 'star';
+                finalColor = { background: '#e0f7fa', border: '#00ffff' };
+                finalShadow = { enabled: true, color: '#00ffff', size: 20, x: 0, y: 0 };
+                finalSize = 30;
+            }
+
+            allNodes.push({
+                id: p.id,
+                label: p.isDeity ? "★ " + p.label : p.label,
+                group: p.school || "Unknown",
+                value: finalSize,
+                color: finalColor,
+                shape: finalShape,
+                shadow: finalShadow,
+                font: { size: p.isDeity ? 22 : 16 },
+                data: p
             });
+        });
 
-            // UPDATE COUNTER
-            document.getElementById('total-counter').innerText = `Total Archived: ${uniqueData.length}`;
+        lineages.forEach(l => {
+            let s = uniqueData.find(x => x.id === l.s);
+            let t = uniqueData.find(x => x.id === l.t);
+            if (s && t) {
+                let isGuru = (l.type === "Lineage (Guru)");
+                let dashes = !isGuru;
+                let color = isGuru ? "#d4af37" : "#555";
+                let width = isGuru ? 2 : 1; 
 
-            uniqueData.forEach(p => {
-                let schoolColor = p.school ? getColor(p.school) : "#ddd";
-                
-                let finalColor = { background: schoolColor, border: '#333' };
-                let finalShape = 'dot';
-                let finalSize = 20;
-                let finalShadow = { enabled: true, color: 'rgba(0,0,0,0.5)', size: 10 };
-
-                if (p.isDeity) {
-                    finalShape = 'star';
-                    finalColor = { background: '#e0f7fa', border: '#00ffff' };
-                    finalShadow = { enabled: true, color: '#00ffff', size: 20, x: 0, y: 0 };
-                    finalSize = 30;
-                }
-
-                allNodes.push({
-                    id: p.id,
-                    label: p.isDeity ? "★ " + p.label : p.label,
-                    group: p.school || "Unknown",
-                    value: finalSize,
-                    color: finalColor,
-                    shape: finalShape,
-                    shadow: finalShadow,
-                    font: { size: p.isDeity ? 22 : 16 },
-                    data: p
+                allEdges.push({
+                    from: l.s, to: l.t, arrows: "to", width: width,
+                    color: { color: color, opacity: 0.6 },
+                    dashes: dashes,
+                    label: l.type,
+                    font: { size: 9, color: '#777', strokeWidth: 0, align: 'middle' }
                 });
-            });
+            }
+        });
 
-            lineages.forEach(l => {
-                let s = uniqueData.find(x => x.id === l.s);
-                let t = uniqueData.find(x => x.id === l.t);
-                
-                if (!s && seenIds.has(l.s)) s = {id: l.s}; 
-                if (!t && seenIds.has(l.t)) t = {id: l.t};
+        const container = document.getElementById('network');
+        const data = { nodes: new vis.DataSet(allNodes), edges: new vis.DataSet(allEdges) };
+        const options = {
+            nodes: {
+                shape: 'dot', size: 20, borderWidth: 2,
+                shadow: { enabled: true, color: 'rgba(0,0,0,0.5)', size: 10, x: 5, y: 5 },
+                font: { face: 'Cinzel', color: '#ffffff', size: 16, strokeWidth: 5, strokeColor: '#050505', align: 'center', vadjust: -35 },
+                color: { border: '#333', background: '#222', highlight: { border: '#d4af37', background: '#444' } }
+            },
+            edges: {
+                width: 1, selectionWidth: 2,
+                smooth: { type: "continuous", forceDirection: "none", roundness: 0.4 },
+                arrows: { to: { scaleFactor: 0.5 } },
+                color: { color: '#444', highlight: '#d4af37', opacity: 0.4 },
+                font: { face: 'Noto Serif', size: 9, color: '#666', strokeWidth: 3, strokeColor: '#050505', align: 'middle' }
+            },
+            physics: {
+                enabled: true,
+                stabilization: { enabled: true, iterations: 1500 },
+                barnesHut: { gravitationalConstant: -10000, centralGravity: 0.2, springLength: 250, springConstant: 0.02, damping: 0.09, avoidOverlap: 1 }
+            },
+            interaction: { hover: true, tooltipDelay: 200, hideEdgesOnDrag: true, zoomView: true }
+        };
 
-                if (s && t) {
-                    // Logic: "Lineage (Guru)" = Solid Line + Gold Color
-                    // Others = Dashed Line + Grey Color
-                    let isGuru = (l.type === "Lineage (Guru)");
-                    let dashes = !isGuru;
-                    let color = isGuru ? "#d4af37" : "#555";
-                    let width = isGuru ? 2 : 1; 
+        network = new vis.Network(container, data, options);
+        network.on("stabilizationIterationsDone", function () { network.setOptions({ physics: false }); });
 
-                    allEdges.push({
-                        from: l.s,
-                        to: l.t,
-                        arrows: "to",
-                        width: width,
-                        color: { color: color, opacity: 0.6 },
-                        dashes: dashes,
-                        label: l.type,
-                        font: { size: 9, color: '#777', strokeWidth: 0, align: 'middle' }
+        // --- INTERACTION LOGIC (FOCUS & HIGHLIGHT) ---
+        network.on("click", function(params) {
+            if (params.nodes.length > 0) {
+                const nodeId = params.nodes[0];
+                const node = allNodes.find(n => n.id === nodeId);
+                if (node) {
+                    openPanel(node.data);
+                    
+                    // HIGHLIGHT LOGIC
+                    const connected = network.getConnectedNodes(nodeId);
+                    const allNodeIds = data.nodes.getIds();
+                    
+                    const updateArray = allNodeIds.map(id => {
+                        if (id === nodeId || connected.includes(id)) {
+                            return { id: id, color: { opacity: 1 } }; // Full opacity
+                        } else {
+                            return { id: id, color: { opacity: 0.1 } }; // Dimmed
+                        }
                     });
+                    data.nodes.update(updateArray);
+
+                    // Sync Timeline
+                    if (!node.data.isDeity) {
+                        const tItem = timelineData.get({ filter: i => i.personId === node.id });
+                        if (tItem.length) timeline.moveTo(tItem[0].start);
+                    }
                 }
-            });
+            } else {
+                closePanel();
+                // Reset Opacity
+                const allNodeIds = data.nodes.getIds();
+                const resetArray = allNodeIds.map(id => {
+                    const original = allNodes.find(n => n.id === id);
+                    return { id: id, color: original.color };
+                });
+                data.nodes.update(resetArray);
+            }
+        });
 
-            updateGraph();
-        }
-
-        // UPDATE GRAPH
+        // --- FILTER & CLUSTER LOGIC ---
         function updateGraph() {
             const sFilter = document.getElementById('schoolFilter').value;
             const rFilter = document.getElementById('regionFilter').value;
-
             let targetIds = new Set();
 
             allNodes.forEach(n => {
@@ -910,20 +940,16 @@
 
                 if (sFilter !== 'all') {
                     if (sFilter === 'Buddhism') {
-                        const buddhistSchools = ['Buddhism', 'Theravada', 'Mahayana', 'Vajrayana', 'Zen'];
-                        if (!p.school || !buddhistSchools.includes(p.school)) matchesSchool = false;
+                        const bSchools = ['Buddhism', 'Theravada', 'Mahayana', 'Vajrayana', 'Zen'];
+                        if (!p.school || !bSchools.includes(p.school)) matchesSchool = false;
                     } else {
                         if (!p.school || p.school !== sFilter) matchesSchool = false;
                     }
                 }
-
                 if (rFilter !== 'all') {
                     if ((!p.region || p.region !== rFilter) && (!p.subregion || p.subregion !== rFilter)) matchesRegion = false;
                 }
-
-                if (matchesSchool && matchesRegion) {
-                    targetIds.add(n.id);
-                }
+                if (matchesSchool && matchesRegion) targetIds.add(n.id);
             });
 
             let visibleIds = new Set();
@@ -942,47 +968,90 @@
                     });
                 }
             }
-
+            
             const filteredNodes = allNodes.filter(n => visibleIds.has(n.id));
-            nodes.clear();
-            edges.clear();
-            nodes.add(filteredNodes);
-            const filteredEdges = allEdges.filter(e => visibleIds.has(e.from) && visibleIds.has(e.to));
-            edges.add(filteredEdges);
+            data.nodes.clear(); data.edges.clear();
+            data.nodes.add(filteredNodes);
+            data.edges.add(allEdges.filter(e => visibleIds.has(e.from) && visibleIds.has(e.to)));
         }
 
-        // TIMELINE
+        let clustersActive = false;
+        function toggleClusters() {
+            if (clustersActive) {
+                // Open Clusters
+                Object.keys(network.body.nodes).forEach(id => {
+                    if (network.isCluster(id)) network.openCluster(id);
+                });
+                clustersActive = false;
+                document.getElementById('clusterBtn').innerText = "Cluster: Off";
+            } else {
+                // Create Clusters by School
+                const schools = [...new Set(allNodes.map(n => n.group))];
+                const clusterOptionsByData = {
+                    joinCondition: function(childOptions) {
+                        return childOptions.group === 'Advaita'; // Example logic, doing robust below
+                    },
+                    processProperties: function(clusterOptions, childNodes) {
+                        return { label: "Advaita", color: "#ff9800", size: 50 };
+                    },
+                };
+                
+                // Simple clustering loop
+                schools.forEach(school => {
+                    if(school === 'Unknown') return;
+                    const clusterOptions = {
+                        joinCondition: function(childOptions) {
+                            return childOptions.group === school;
+                        },
+                        processProperties: function(clusterOptions, childNodes) {
+                            return { 
+                                label: school, 
+                                color: getColor(school), 
+                                size: 30 + (childNodes.length * 2),
+                                font: {size: 20, face: 'Cinzel'}
+                            };
+                        },
+                        clusterNodeProperties: {allowSingleNodeCluster: false}
+                    };
+                    network.cluster(clusterOptions);
+                });
+                
+                clustersActive = true;
+                document.getElementById('clusterBtn').innerText = "Cluster: On";
+            }
+        }
+
+        // --- TIMELINE ---
         const timelineData = new vis.DataSet(rawData.filter(x => !x.isDeity).map((t, i) => ({
-            id: i,
-            content: t.label,
-            start: new Date(0).setFullYear(t.year),
-            type: 'point', 
-            className: 'vis-point', 
-            personId: t.id,
+            id: i, content: t.label, start: new Date(0).setFullYear(t.year),
+            type: 'point', className: 'vis-point', personId: t.id,
             style: `border-color: ${getColor(t.school)}` 
         })));
 
         const timeline = new vis.Timeline(document.getElementById('mytimeline'), timelineData, {
-            height: '100%',
-            stack: true, 
-            margin: { item: 15, axis: 10 },
-            orientation: 'bottom',
-            start: new Date(0).setFullYear(1000),
-            end: new Date(0).setFullYear(2000),
-            zoomMin: 1000 * 60 * 60 * 24 * 365 * 10
+            height: '100%', stack: true, margin: { item: 15, axis: 10 }, orientation: 'bottom',
+            start: new Date(0).setFullYear(1000), end: new Date(0).setFullYear(2000), zoomMin: 1000 * 60 * 60 * 24 * 365 * 10
         });
 
         timeline.on('select', (props) => {
             if (props.items.length) {
                 const item = timelineData.get(props.items[0]);
                 const node = allNodes.find(n => n.id === item.personId);
-                if (node) openPanel(node.data);
+                if (node) {
+                    network.selectNodes([node.id]);
+                    network.focus(node.id, {scale: 1.5, animation: true});
+                    openPanel(node.data);
+                }
             }
         });
 
+        function jumpToDate(year) {
+            timeline.moveTo(new Date(0).setFullYear(year));
+        }
+
+        // --- UI HELPERS ---
         function openPanel(d) {
             document.getElementById('p-name').innerText = d.iast || d.label;
-            
             if (d.isDeity) {
                 document.getElementById('p-religion').innerText = d.religion || "";
                 document.getElementById('p-dates').innerText = "Divine / Timeless";
@@ -992,20 +1061,14 @@
                 document.getElementById('p-attributes').innerText = d.attributes || "N/A";
             } else {
                 document.getElementById('p-religion').innerText = "";
-                // Use displayDate if available
                 document.getElementById('p-dates').innerText = d.displayDate ? d.displayDate : (d.year < 0 ? Math.abs(d.year) + " BCE" : d.year + " CE");
                 document.getElementById('human-fields').style.display = 'block';
                 document.getElementById('deity-fields').style.display = 'none';
                 document.getElementById('p-school').innerText = d.school || "";
                 document.getElementById('p-region').innerText = (d.region || "") + (d.subregion ? ` (${d.subregion})` : "");
-
                 const workEl = document.getElementById('p-work');
-                if (d.work && d.workUrl) {
-                    workEl.innerHTML = `<a href="${d.workUrl}" target="_blank" class="opus-link">${d.work} ↗</a>`;
-                } else {
-                    workEl.innerText = d.work || "N/A";
-                }
-
+                if (d.work && d.workUrl) workEl.innerHTML = `<a href="${d.workUrl}" target="_blank" class="opus-link">${d.work} ↗</a>`;
+                else workEl.innerText = d.work || "N/A";
                 const ul = document.getElementById('p-others');
                 ul.innerHTML = "";
                 if (d.others && d.others.length > 0) d.others.forEach(w => ul.innerHTML += `<li>${w}</li>`);
@@ -1013,7 +1076,6 @@
             }
 
             document.getElementById('p-note').innerText = d.note || "";
-            
             const wikiBtn = document.getElementById('p-wiki');
             const wikiSlug = d.wiki || d.label.replace(/\s+/g, '_');
             wikiBtn.href = `https://en.wikipedia.org/wiki/${wikiSlug}`;
@@ -1021,32 +1083,34 @@
             let parent = lineages.find(l => l.t === d.id); 
             let lineageText = "Source / Independent";
             if (parent) {
-                lineageText = `${parent.type} of ${parent.s}`; 
+                if (parent.type === "Lineage (Guru)") lineageText = `Disciple of ${parent.s}`;
+                else if (parent.type === "Lineage") lineageText = `In Lineage of ${parent.s}`;
+                else if (parent.type === "Influence") lineageText = `Influenced by ${parent.s}`;
+                else lineageText = `${parent.type} of ${parent.s}`; 
             }
             document.getElementById('p-lineage').innerText = lineageText;
-
-            document.getElementById('side-panel').style.width = "400px";
+            document.getElementById('side-panel').classList.add('open');
+            // Mobile handling done via CSS media query
+            if(window.innerWidth > 768) document.getElementById('side-panel').style.width = "400px";
             document.getElementById('panel-content').style.opacity = "1";
         }
 
-        network.on("click", function(params) {
-            if (params.nodes.length > 0) {
-                const nodeId = params.nodes[0];
-                const node = nodes.get(nodeId);
-                if (node) {
-                    openPanel(node.data);
-                    if (!node.data.isDeity) {
-                        const tItem = timelineData.get({ filter: i => i.personId === node.id });
-                        if (tItem.length) timeline.moveTo(tItem[0].start);
-                    }
-                }
-            } else {
-                document.getElementById('side-panel').style.width = "0";
-                document.getElementById('panel-content').style.opacity = "0";
-            }
-        });
+        function closePanel() {
+            const panel = document.getElementById('side-panel');
+            panel.style.width = "0";
+            panel.classList.remove('open'); // For mobile
+            document.getElementById('panel-content').style.opacity = "0";
+            
+            // Reset opacity of network
+            const allNodeIds = data.nodes.getIds();
+            const resetArray = allNodeIds.map(id => {
+                const original = allNodes.find(n => n.id === id);
+                return { id: id, color: original.color };
+            });
+            data.nodes.update(resetArray);
+        }
 
-        // --- SEARCH LOGIC (AUTOCOMPLETE) ---
+        // --- SEARCH LOGIC ---
         const searchInput = document.getElementById('search');
         const searchResults = document.getElementById('search-results');
 
@@ -1054,15 +1118,9 @@
             const query = e.target.value.toLowerCase();
             searchResults.innerHTML = '';
             
-            if (query.length < 2) {
-                searchResults.style.display = 'none';
-                return;
-            }
+            if (query.length < 2) { searchResults.style.display = 'none'; return; }
 
-            const matches = allNodes.filter(n => 
-                n.label.toLowerCase().includes(query) || 
-                (n.data.school && n.data.school.toLowerCase().includes(query))
-            );
+            const matches = allNodes.filter(n => n.label.toLowerCase().includes(query) || (n.data.school && n.data.school.toLowerCase().includes(query)));
 
             if (matches.length > 0) {
                 searchResults.style.display = 'flex';
@@ -1072,7 +1130,6 @@
                     item.innerHTML = `<span>${match.label}</span><span class="meta">${match.data.school || ''}</span>`;
                     item.onclick = () => {
                         document.getElementById('schoolFilter').value = 'all';
-                        document.getElementById('regionFilter').value = 'all';
                         updateGraph();
                         setTimeout(() => {
                             network.selectNodes([match.id]);
@@ -1085,47 +1142,28 @@
                     searchResults.appendChild(item);
                 });
             } else {
-                searchResults.style.display = 'none';
+                searchResults.style.display = 'flex';
+                searchResults.innerHTML = '<div class="search-item empty">No results found</div>';
             }
         });
 
         document.addEventListener('click', function(e) {
-            if (e.target !== searchInput && e.target !== searchResults) {
-                searchResults.style.display = 'none';
-            }
+            if (e.target !== searchInput && e.target !== searchResults) searchResults.style.display = 'none';
         });
 
+        // --- GUTTER DRAG ---
         const gutter = document.getElementById('drag-gutter');
         const timelineDiv = document.getElementById('mytimeline');
         let isDragging = false;
         let startY, startHeight;
-
-        gutter.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startY = e.clientY;
-            startHeight = timelineDiv.offsetHeight;
-            document.body.style.cursor = 'ns-resize'; 
-            document.body.style.userSelect = 'none'; 
-        });
-
+        gutter.addEventListener('mousedown', (e) => { isDragging = true; startY = e.clientY; startHeight = timelineDiv.offsetHeight; document.body.style.cursor = 'ns-resize'; document.body.style.userSelect = 'none'; });
         window.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             const deltaY = startY - e.clientY;
             const newHeight = startHeight + deltaY;
-            if (newHeight > 50 && newHeight < window.innerHeight * 0.8) {
-                timelineDiv.style.height = newHeight + 'px';
-            }
+            if (newHeight > 50 && newHeight < window.innerHeight * 0.8) timelineDiv.style.height = newHeight + 'px';
         });
-
-        window.addEventListener('mouseup', () => {
-            if (isDragging) {
-                isDragging = false;
-                document.body.style.cursor = '';
-                document.body.style.userSelect = '';
-                network.redraw();
-                timeline.redraw();
-            }
-        });
+        window.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; network.redraw(); timeline.redraw(); }});
     </script>
 </body>
 </html>
