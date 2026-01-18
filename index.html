@@ -422,41 +422,76 @@
             updateGraph();
         }
 
-        // UPDATE GRAPH (FILTERING)
+        // UPDATE GRAPH (SMART LINEAGE FILTER)
+        // This new function ensures that when you filter, you also see the teachers/ancestors!
         function updateGraph() {
             const sFilter = document.getElementById('schoolFilter').value;
             const rFilter = document.getElementById('regionFilter').value;
 
-            const filteredNodes = allNodes.filter(n => {
-                let p = n.data;
-                let show = true;
+            // 1. Identify "Target" nodes (The ones that strictly match your filter)
+            let targetIds = new Set();
 
-                // School Logic
+            allNodes.forEach(n => {
+                let p = n.data;
+                let matchesSchool = true;
+                let matchesRegion = true;
+
+                // Check School
                 if (sFilter !== 'all') {
                     if (sFilter === 'Buddhism') {
-                        if (!p.parent.includes('Buddhism')) show = false;
-                    } else if (p.school !== sFilter && p.subset !== sFilter) {
-                        show = false;
+                        // Special check for Buddhism group
+                        const buddhistSchools = ['Buddhism', 'Theravada', 'Mahayana', 'Vajrayana', 'Zen'];
+                        if (!buddhistSchools.includes(p.school)) matchesSchool = false;
+                    } else {
+                        // Exact match for other schools
+                        if (p.school !== sFilter) matchesSchool = false;
                     }
                 }
 
-                // Region Logic
-                if (rFilter !== 'all' && p.region !== rFilter && p.zone !== rFilter) {
-                    show = false;
+                // Check Region
+                if (rFilter !== 'all') {
+                    if (p.region !== rFilter && p.subregion !== rFilter) matchesRegion = false;
                 }
 
-                // Deity visibility
-                if (p.isDeity && sFilter !== 'all') show = false;
-
-                return show;
+                // If it matches the specific filter, add to targets
+                if (matchesSchool && matchesRegion) {
+                    targetIds.add(n.id);
+                }
             });
 
+            // 2. Ancestor Logic: If filters are active, automatically find and show the Gurus (Parents)
+            let visibleIds = new Set();
+
+            if (sFilter === 'all' && rFilter === 'all') {
+                // If no filter, show everyone
+                allNodes.forEach(n => visibleIds.add(n.id));
+            } else {
+                // Start with the specific people we found
+                targetIds.forEach(id => visibleIds.add(id));
+
+                // Loop through connections to find parents/gurus
+                // We repeat this loop to find the Guru's Guru, then HIS Guru, etc.
+                let changed = true;
+                while (changed) {
+                    changed = false;
+                    allEdges.forEach(e => {
+                        // If the Student (to) is visible, make the Teacher (from) visible too
+                        if (visibleIds.has(e.to) && !visibleIds.has(e.from)) {
+                            visibleIds.add(e.from);
+                            changed = true;
+                        }
+                    });
+                }
+            }
+
+            // 3. Update the Visualization
+            const filteredNodes = allNodes.filter(n => visibleIds.has(n.id));
+            
             nodes.clear();
             edges.clear();
             nodes.add(filteredNodes);
 
-            // Filter Edges: Only show if both nodes are present
-            const visibleIds = new Set(filteredNodes.map(n => n.id));
+            // Only show lines connecting people who are actually visible
             const filteredEdges = allEdges.filter(e => visibleIds.has(e.from) && visibleIds.has(e.to));
             edges.add(filteredEdges);
         }
