@@ -29,6 +29,29 @@
             flex-direction: column;
         }
 
+        /* --- WELCOME MODAL --- */
+        #welcome-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
+            z-index: 9999; display: flex; justify-content: center; align-items: center;
+            opacity: 1; transition: opacity 0.5s ease;
+        }
+        .modal-box {
+            background: #111; border: 1px solid var(--gold);
+            padding: 40px; max-width: 500px; text-align: center;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+            border-radius: 4px;
+        }
+        .modal-title { font-family: 'Cinzel', serif; font-size: 2.5rem; color: var(--gold); margin-bottom: 10px; }
+        .modal-desc { color: #ccc; font-size: 1rem; line-height: 1.6; margin-bottom: 30px; }
+        .enter-btn {
+            background: var(--gold); color: #000; padding: 12px 30px;
+            font-family: 'Cinzel', serif; font-weight: bold; font-size: 1rem;
+            cursor: pointer; border: none; transition: 0.3s;
+        }
+        .enter-btn:hover { background: #fff; box-shadow: 0 0 20px #fff; }
+        .hidden { opacity: 0; pointer-events: none; }
+
         /* --- HEADER --- */
         header {
             height: 60px;
@@ -44,45 +67,29 @@
         }
 
         .brand {
-            font-family: 'Cinzel', serif;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            color: var(--gold);
-            font-weight: 700;
-            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            font-family: 'Cinzel', serif; font-size: 1.2rem; letter-spacing: 2px;
+            color: var(--gold); font-weight: 700; text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
             cursor: pointer;
         }
 
-        .controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            position: relative;
-        }
+        .controls { display: flex; gap: 10px; align-items: center; position: relative; }
 
         select, input, .btn {
-            background: #1a1a1a;
-            color: #fff;
-            border: 1px solid #666;
-            padding: 6px 10px;
-            font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-            border-radius: 4px;
-            outline: none;
-            transition: 0.3s;
+            background: #1a1a1a; color: #fff; border: 1px solid #666;
+            padding: 6px 10px; font-family: 'Cinzel', serif; font-size: 0.7rem;
+            border-radius: 4px; outline: none; transition: 0.3s;
         }
 
         .btn { cursor: pointer; text-transform: uppercase; background: #222; border-color: var(--gold); color: var(--gold); min-width: 80px; text-align: center; }
         .btn:hover { background: var(--gold); color: #000; }
+        .btn.active { background: var(--gold); color: #000; box-shadow: 0 0 10px var(--gold); }
 
         select:hover, input:focus { border-color: var(--gold); background: #222; }
 
         #search-results {
-            position: absolute;
-            top: 40px; right: 0; width: 220px;
+            position: absolute; top: 40px; right: 0; width: 220px;
             background: #111; border: 1px solid var(--gold);
-            max-height: 50vh; overflow-y: auto;
-            display: none; flex-direction: column;
+            max-height: 50vh; overflow-y: auto; display: none; flex-direction: column;
             z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,1);
         }
         .search-item {
@@ -91,39 +98,25 @@
             display: flex; justify-content: space-between;
         }
         .search-item:hover { background: var(--gold); color: #000; }
+        .search-item span.meta { font-size: 0.7rem; color: var(--gold); font-style: italic; }
+        .search-item:hover span.meta { color: #222; }
 
         /* --- MAIN AREA --- */
-        .main-container {
-            flex-grow: 1;
-            position: relative; 
-            display: flex;
-            overflow: hidden; 
-        }
+        .main-container { flex-grow: 1; position: relative; display: flex; overflow: hidden; }
 
         #network {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             background: radial-gradient(circle at 50% 50%, #161616 0%, #050505 100%);
             outline: none;
         }
-        /* Force Hand Cursor on Hover (handled by JS, class backup) */
-        .cursor-pointer canvas { cursor: pointer !important; }
 
-        /* --- TIMELINE AREA --- */
+        /* --- TIMELINE --- */
         #timeline-container {
-            position: relative;
-            z-index: 20;
-            flex-shrink: 0;
-            background: #080808;
-            border-top: 1px solid #333;
-            display: flex;
-            flex-direction: column;
+            position: relative; z-index: 20; flex-shrink: 0;
+            background: #080808; border-top: 1px solid #333; display: flex; flex-direction: column;
         }
-
         .timeline-nav {
-            display: flex; justify-content: center; gap: 8px;
-            padding: 5px 0; background: #0f0f0f;
-            border-bottom: 1px solid #222;
+            display: flex; justify-content: center; gap: 8px; padding: 5px 0; background: #0f0f0f; border-bottom: 1px solid #222;
         }
         .time-btn {
             background: transparent; border: 1px solid #444; color: #888;
@@ -132,57 +125,24 @@
         }
         .time-btn:hover { border-color: var(--gold); color: var(--gold); }
 
-        #mytimeline {
-            height: 160px;
-            width: 100%;
+        #mytimeline { height: 160px; width: 100%; }
+        
+        #drag-gutter {
+            height: 12px; background: #0f0f0f; border-top: 1px solid #333;
+            box-shadow: 0 -10px 20px rgba(0,0,0,1); cursor: ns-resize;
+            display: flex; justify-content: center; align-items: center; position: relative;
         }
-
-        /* TIMELINE STYLES */
-        .vis-text { color: #888 !important; font-family: 'Cinzel', serif; font-size: 10px !important; }
-        .vis-item.vis-point {
-            color: #ccc !important;
-            font-family: 'Noto Serif', serif;
-            font-size: 11px !important;
-            background: none !important;
-            border: none !important;
-            margin-top: 20px;
-        }
-        .vis-item.vis-dot {
-            border-width: 2px;
-            background-color: #000;
-            top: 0px !important;
-        }
-        .vis-item.vis-selected { color: var(--gold) !important; }
-        .vis-item.vis-selected .vis-dot { background-color: var(--gold) !important; border-color: #fff !important; }
+        #drag-gutter::before { content: ""; width: 40px; height: 3px; background: linear-gradient(90deg, transparent, var(--gold), transparent); border-radius: 2px; opacity: 0.5; }
 
         /* --- SIDE PANEL --- */
         #side-panel {
-            width: 0;
-            background: rgba(10, 10, 10, 0.98);
-            backdrop-filter: blur(10px);
-            border-left: 1px solid var(--gold);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-y: auto;
-            z-index: 5000;
-            position: fixed;
-            right: 0;
-            top: 60px;
-            bottom: 0;
+            width: 0; background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(10px);
+            border-left: 1px solid var(--gold); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto; z-index: 5000; position: fixed; right: 0; top: 60px; bottom: 0;
             box-shadow: -10px 0 50px rgba(0, 0, 0, 0.9);
         }
-
-        .panel-content {
-            padding: 30px 20px;
-            opacity: 0;
-            transition: opacity 0.3s 0.2s;
-            min-width: 300px;
-            padding-bottom: 80px;
-        }
-
-        .close-btn {
-            position: absolute; top: 15px; right: 20px;
-            color: #666; cursor: pointer; font-size: 1.5rem; z-index: 10;
-        }
+        .panel-content { padding: 30px 20px; opacity: 0; transition: opacity 0.3s 0.2s; min-width: 300px; padding-bottom: 80px; }
+        .close-btn { position: absolute; top: 15px; right: 20px; color: #666; cursor: pointer; font-size: 1.5rem; z-index: 10; }
         .p-title { font-family: 'Cinzel', serif; font-size: 1.6rem; color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
         .p-label { color: #666; font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 2px; margin-top: 20px; display: block; font-weight: 700; text-transform: uppercase; }
         .p-value { font-size: 0.95rem; color: #ddd; line-height: 1.5; margin-top: 4px; }
@@ -191,18 +151,12 @@
         .works-list { margin-top: 10px; padding-left: 0; list-style: none; }
         .works-list li { margin-bottom: 6px; color: #bbb; font-size: 0.9rem; position: relative; padding-left: 15px; }
         .works-list li::before { content: "•"; color: var(--gold); position: absolute; left: 0; }
-        
         .opus-link { color: var(--gold); text-decoration: none; border-bottom: 1px dotted var(--gold); transition: all 0.2s ease; cursor: pointer; }
         .opus-link:hover { color: #fff; border-bottom: 1px solid #fff; }
-
-        .wiki-btn {
-            margin-top: 25px; display: block; text-align: center; padding: 10px; border: 1px solid var(--gold);
-            color: var(--gold); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.8rem;
-            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
-        }
+        .wiki-btn { margin-top: 25px; display: block; text-align: center; padding: 10px; border: 1px solid var(--gold); color: var(--gold); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
         .wiki-btn:hover { background: var(--gold); color: #000; }
 
-        /* --- LEGEND (Responsive) --- */
+        /* --- LEGEND --- */
         .legend {
             position: absolute; bottom: 20px; left: 20px; z-index: 1000;
             background: rgba(0, 0, 0, 0.8); border: 1px solid #333;
@@ -216,57 +170,38 @@
         .symbol-line { width: 20px; height: 1px; background-color: #888; }
         #total-counter { margin-top: 5px; padding-top: 5px; border-top: 1px solid #444; color: var(--gold); font-size: 0.6rem; }
 
-        /* --- MOBILE MEDIA QUERIES --- */
+        /* TIMELINE CSS */
+        .vis-text { color: #888 !important; font-family: 'Cinzel', serif; font-size: 10px !important; }
+        .vis-item.vis-point { color: #ccc !important; font-family: 'Noto Serif', serif; font-size: 11px !important; background: none !important; border: none !important; margin-top: 20px; }
+        .vis-item.vis-dot { border-width: 2px; background-color: #000; top: 0px !important; }
+        .vis-item.vis-selected { color: var(--gold) !important; }
+        .vis-item.vis-selected .vis-dot { background-color: var(--gold) !important; border-color: #fff !important; }
+
+        /* --- MOBILE --- */
         @media (max-width: 768px) {
             header { padding: 0 10px; }
             .brand { font-size: 1rem; }
-            
             .controls select#regionFilter { display: none; } 
             #search { width: 100px; }
-            
-            #side-panel {
-                width: 100% !important;
-                height: 0;
-                top: auto; bottom: 0;
-                border-left: none; border-top: 1px solid var(--gold);
-            }
+            #side-panel { width: 100% !important; height: 0; top: auto; bottom: 0; border-left: none; border-top: 1px solid var(--gold); }
             #side-panel.open { height: 75% !important; }
-            
-            .legend {
-                bottom: 10px; left: 10px; padding: 8px;
-                flex-direction: row; flex-wrap: wrap; 
-                max-width: 90%; gap: 15px;
-            }
+            .legend { bottom: 10px; left: 10px; padding: 8px; flex-direction: row; flex-wrap: wrap; max-width: 90%; gap: 15px; }
             #total-counter { border-top: none; border-left: 1px solid #444; padding-left: 10px; margin-top: 0; padding-top: 0; display: flex; align-items: center;}
-            
             #mytimeline { height: 140px; }
             .timeline-nav { display: none; }
-        }
-        
-        #drag-gutter {
-            height: 12px;
-            background: #0f0f0f;
-            border-top: 1px solid #333;
-            box-shadow: 0 -10px 20px rgba(0,0,0,1);
-            cursor: ns-resize;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        #drag-gutter::before {
-            content: "";
-            width: 40px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            border-radius: 2px;
-            opacity: 0.5;
         }
     </style>
 </head>
 
 <body>
+    <div id="welcome-modal">
+        <div class="modal-box">
+            <div class="modal-title">Indosphere</div>
+            <div class="modal-desc">The Grand Archive of Indian Tradition.<br><br>Explore 200+ Gods, Sages, and Philosophers.<br><br>• <strong>Scroll</strong> to Zoom<br>• <strong>Drag</strong> to Pan<br>• <strong>Click</strong> to Explore</div>
+            <button class="enter-btn" onclick="enterSite()">Enter Archive</button>
+        </div>
+    </div>
+
     <header>
         <div class="brand" onclick="location.reload()">Indosphere</div>
         <div class="controls">
@@ -285,6 +220,7 @@
                     <option value="Yoga">Yoga</option>
                     <option value="Mimamsa">Mimamsa</option>
                     <option value="Kashmir Shaivism">Kashmir Shaivism</option>
+                    <option value="Shaiva">Shaiva</option>
                     <option value="Bhakti">Bhakti</option>
                 </optgroup>
                 <optgroup label="Heterodox">
@@ -392,7 +328,7 @@
             {id:"Indra", label:"Indra", group:"Deity", region:"Divine", isDeity:true, note:"King of Gods; Vedic deity of rain and thunder.", religion:"[Hinduism]", otherNames:"Sakra, Devendra", attributes:"Vajra (Thunderbolt), Elephant Airavata"},
             {id:"Varuna", label:"Varuna", group:"Deity", region:"Divine", isDeity:true, note:"God of Waters; Vedic deity of cosmic order.", religion:"[Hinduism]", otherNames:"Lord of Waters", attributes:"Noose (Pasha), Makara"},
 
-            // HUMANS
+            // HUMANS (FULL LIST)
             {id:"ShaktiRishi", label:"Shakti (Rishi)", year:-2500, displayDate:"c. 2500 BCE", school:"Vedas", region:"North", others:[], note:"Son of Vashishta; Father of Parashara."},
             {id:"Dhanvantari", label:"Dhanvantari", year:-3000, displayDate:"Mythological / Vedic", school:"Ayurveda", region:"Vedic", work:"Ayurveda", others:["Dhanvantari Nighantu"], note:"God of Medicine."},
             {id:"Vashishta", label:"Vashishta", year:-3000, displayDate:"c. 3000 BCE", school:"Vedas", region:"North", work:"Mandala 7 of the Rigveda", others:["Yoga Vashishta"], note:"saptarishih."},
@@ -597,6 +533,7 @@
             {id:"Deussen", label:"Paul Deussen", year:1845, displayDate:"1845–1919", school:"Indology", region:"Global", subregion:"Germany", work:"Sixty Upanishads", others:[], note:"Vedanta."}
         ];
 
+        // --- LINEAGES ---
         const lineages = [
             {s:"Shiva", t:"Vasugupta", type:"Influence"}, {s:"Shiva", t:"Shankara", type:"Influence"},
             {s:"Narayana", t:"Brahma", type:"Lineage"}, {s:"Brahma", t:"Vashishta", type:"Lineage"},
@@ -618,6 +555,7 @@
             {s:"RamanaMaharshi", t:"NisargadattaMaharaj", type:"Influence"}, {s:"Shankara", t:"ChandrashekharaBharati", type:"Lineage"},
             {s:"ChandrashekharaBharati", t:"AbhinavaVidyatirtha", type:"Lineage (Guru)"}, {s:"AbhinavaVidyatirtha", t:"BharatiTirthaCurrent", type:"Lineage (Guru)"},
             {s:"Shankara", t:"NischalanandaSaraswati", type:"Lineage"},
+            
             {s:"Narayana", t:"Madhva", type:"Influence"}, {s:"Madhva", t:"Padmanabha", type:"Lineage (Guru)"}, 
             {s:"Padmanabha", t:"Narahari", type:"Lineage (Guru)"}, {s:"Madhva", t:"Jayatirtha", type:"Lineage"}, 
             {s:"Jayatirtha", t:"Vyasatirtha", type:"Lineage"}, {s:"Vyasatirtha", t:"Raghavendra", type:"Lineage"},
@@ -667,41 +605,36 @@
 
         // Init Data
         const seenIds = new Set();
-        // Prevent dupes first
-        const uniqueRawData = [];
         rawData.forEach(item => {
             if (!seenIds.has(item.id)) {
                 seenIds.add(item.id);
-                uniqueRawData.push(item);
+                
+                let schoolColor = item.school ? getColor(item.school) : "#ddd";
+                let finalColor = { background: schoolColor, border: '#333' };
+                let finalShape = 'dot';
+                let finalSize = 25;
+                let finalFont = { size: 16 };
+
+                if (item.isDeity) {
+                    finalShape = 'star';
+                    finalColor = { background: '#e0f7fa', border: '#00ffff' };
+                    finalSize = 40;
+                    finalFont = { size: 24 };
+                }
+
+                allNodes.push({
+                    id: item.id,
+                    label: item.label,
+                    group: item.school || "Unknown",
+                    value: finalSize,
+                    color: finalColor,
+                    shape: finalShape,
+                    font: finalFont,
+                    data: item
+                });
             }
         });
-        document.getElementById('total-counter').innerText = `Total Archived: ${uniqueRawData.length}`;
-
-        uniqueRawData.forEach(p => {
-            let schoolColor = p.school ? getColor(p.school) : "#ddd";
-            let finalColor = { background: schoolColor, border: '#333' };
-            let finalShape = 'dot';
-            let finalSize = 25;
-            let finalFont = { size: 16 };
-
-            if (p.isDeity) {
-                finalShape = 'star';
-                finalColor = { background: '#e0f7fa', border: '#00ffff' };
-                finalSize = 40;
-                finalFont = { size: 24 };
-            }
-
-            allNodes.push({
-                id: p.id,
-                label: p.label,
-                group: p.school || "Unknown",
-                value: finalSize,
-                color: finalColor,
-                shape: finalShape,
-                font: finalFont,
-                data: p
-            });
-        });
+        document.getElementById('total-counter').innerText = `Total Archived: ${seenIds.size}`;
 
         lineages.forEach(l => {
             if (seenIds.has(l.s) && seenIds.has(l.t)) {
@@ -714,12 +647,12 @@
                     color: { color: color, opacity: 0.6 },
                     dashes: dashes,
                     label: l.type,
-                    font: { size: 9, color: '#888', strokeWidth: 2, strokeColor: '#050505', align: 'middle' }
+                    font: { size: 8, color: '#666', strokeWidth: 2, strokeColor: '#050505', align: 'middle' }
                 });
             }
         });
 
-        // --- OPTIMIZED PHYSICS ---
+        // --- NETWORK & PHYSICS ---
         const container = document.getElementById('network');
         const data = { nodes: new vis.DataSet(allNodes), edges: new vis.DataSet(allEdges) };
         const options = {
@@ -736,15 +669,13 @@
                 enabled: true,
                 stabilization: {
                     enabled: true,
-                    iterations: 150, // Fast initial load
-                    updateInterval: 50
+                    iterations: 1500, // HIGH ITERATIONS = PRE-CALCULATED LAYOUT (No lag on load)
+                    updateInterval: 100
                 },
                 barnesHut: {
-                    gravitationalConstant: -8000, // Reduced repulsion to prevent explosion
-                    centralGravity: 0.1,
-                    springLength: 250, // Longer springs to space out
+                    gravitationalConstant: -12000, 
+                    springLength: 200,
                     springConstant: 0.04,
-                    damping: 0.09,
                     avoidOverlap: 1
                 }
             },
@@ -753,42 +684,36 @@
 
         network = new vis.Network(container, data, options);
 
-        // FREEZE AFTER LOAD TO STOP LAG
+        // Turn off physics after load to save battery/CPU
         network.on("stabilizationIterationsDone", function () {
             network.setOptions({ physics: { enabled: false } }); 
         });
 
-        // CURSOR LOGIC (Forced)
-        network.on("hoverNode", function () {
-            document.getElementById('network').style.cursor = "pointer";
-        });
-        network.on("blurNode", function () {
-            document.getElementById('network').style.cursor = "default";
-        });
+        // Forced Cursor Logic
+        network.on("hoverNode", function () { document.getElementById('network').style.cursor = "pointer"; });
+        network.on("blurNode", function () { document.getElementById('network').style.cursor = "default"; });
 
-        // CLICK
+        // --- INTERACTION ---
         network.on("click", function(params) {
             if (params.nodes.length > 0) {
                 const nodeId = params.nodes[0];
                 if (network.isCluster(nodeId)) {
-                    network.openCluster(nodeId); // Click to open
+                    network.openCluster(nodeId);
                     return;
                 }
                 const node = allNodes.find(n => n.id === nodeId);
                 if (node) {
                     openPanel(node.data);
                     
-                    // Focus Mode
+                    // Focus Mode (Dim others)
                     const connected = network.getConnectedNodes(nodeId);
                     const allIds = data.nodes.getIds();
                     const updates = allIds.map(id => {
-                        // Keep clusters visible
                         if (network.isCluster(id)) return { id: id, color: { opacity: 1 } };
                         return { id: id, color: { opacity: (id === nodeId || connected.includes(id)) ? 1 : 0.1 } };
                     });
                     data.nodes.update(updates);
                     
-                    // Timeline Sync
                     if (!node.data.isDeity) {
                         const tItem = timelineData.get({ filter: i => i.personId === node.id });
                         if (tItem.length) timeline.moveTo(tItem[0].start);
@@ -799,36 +724,37 @@
                 // Reset Opacity
                 const allIds = data.nodes.getIds();
                 const resets = allIds.map(id => {
-                    if (network.isCluster(id)) return { id: id, color: { opacity: 1 } };
                     const original = allNodes.find(n => n.id === id);
-                    return { id: id, color: original.color };
+                    // Check if node still exists (might be clustered)
+                    if(original) return { id: id, color: original.color };
+                    return {id: id, color: {opacity: 1}}; // Cluster backup
                 });
                 data.nodes.update(resets);
             }
         });
 
-        // --- FILTER & CLUSTER FIX ---
-        let clustersActive = false;
+        // --- CLUSTERING (FLOWER BLOOM) ---
         function toggleClusters() {
-            if (clustersActive) {
-                // Open all clusters
-                const clusterIds = Object.keys(network.body.nodes).filter(id => id.startsWith('cluster_'));
+            const clusterIds = Object.keys(network.body.nodes).filter(id => id.startsWith('cluster_'));
+            if (clusterIds.length > 0) {
+                // Open all
                 clusterIds.forEach(id => network.openCluster(id));
-                clustersActive = false;
                 document.getElementById('clusterBtn').innerText = "Cluster";
-                // Re-stabilize
+                
+                // Wiggle effect
                 network.setOptions({ physics: { enabled: true } });
                 network.stabilize();
-                setTimeout(() => { network.setOptions({ physics: { enabled: false } }); }, 1000);
+                setTimeout(() => { network.setOptions({ physics: { enabled: false } }); }, 1500);
             } else {
-                // Cluster
+                // Create Clusters
                 const schools = [...new Set(allNodes.map(n => n.group))];
                 schools.forEach(school => {
                     if(school === 'Unknown' || school === 'Deity') return;
+                    
+                    // FLOWER BLOOM LOGIC: Force positions when opening? 
+                    // Vis.js handles basic explosion. We just customize the cluster node.
                     const clusterOptions = {
-                        joinCondition: function(child) {
-                            return child.group === school; 
-                        },
+                        joinCondition: function(child) { return child.group === school; },
                         clusterNodeProperties: { 
                             id: 'cluster_' + school, 
                             borderWidth: 3, 
@@ -836,65 +762,18 @@
                             color: getColor(school), 
                             label: school, 
                             font: {size: 30, face: 'Cinzel', color: '#fff'},
-                            size: 60,
+                            size: 50,
                             allowSingleNodeCluster: false
                         }
                     };
                     network.cluster(clusterOptions);
                 });
-                clustersActive = true;
                 document.getElementById('clusterBtn').innerText = "Uncluster";
             }
         }
 
-        function applyFilters() {
-            // Uncluster before filtering to avoid bugs
-            if(clustersActive) toggleClusters();
-
-            const sFilter = document.getElementById('schoolFilter').value;
-            const rFilter = document.getElementById('regionFilter').value;
-            let targetIds = new Set();
-
-            allNodes.forEach(n => {
-                let p = n.data;
-                let mS = (sFilter === 'all') || (p.school === sFilter);
-                if (sFilter === 'Buddhism' && ['Theravada','Mahayana','Vajrayana','Zen'].includes(p.school)) mS = true;
-                let mR = (rFilter === 'all') || (p.region === rFilter || p.subregion === rFilter);
-                if (mS && mR) targetIds.add(n.id);
-            });
-
-            // Expand Lineage
-            if (sFilter !== 'all' || rFilter !== 'all') {
-                let visibleIds = new Set(targetIds);
-                let changed = true;
-                while(changed) {
-                    changed = false;
-                    allEdges.forEach(e => {
-                        if(visibleIds.has(e.to) && !visibleIds.has(e.from)) {
-                             visibleIds.add(e.from);
-                             changed = true;
-                        }
-                    });
-                }
-                const filteredNodes = allNodes.filter(n => visibleIds.has(n.id));
-                const filteredEdges = allEdges.filter(e => visibleIds.has(e.from) && visibleIds.has(e.to));
-                data.nodes.clear(); data.edges.clear();
-                data.nodes.add(filteredNodes);
-                data.edges.add(filteredEdges);
-            } else {
-                data.nodes.clear(); data.edges.clear();
-                data.nodes.add(allNodes);
-                data.edges.add(allEdges);
-            }
-
-            // TRIGGER WIGGLE
-            network.setOptions({ physics: { enabled: true } });
-            network.stabilize();
-            setTimeout(() => { network.setOptions({ physics: { enabled: false } }); }, 1500);
-        }
-
         // --- TIMELINE ---
-        const timelineData = new vis.DataSet(uniqueRawData.filter(x => !x.isDeity).map((t, i) => ({
+        const timelineData = new vis.DataSet(rawData.filter(x => !x.isDeity).map((t, i) => ({
             id: i, content: t.label, start: new Date(0).setFullYear(t.year),
             type: 'point', className: 'vis-point', personId: t.id,
             style: `border-color: ${getColor(t.school)}` 
@@ -905,6 +784,7 @@
             start: new Date(0).setFullYear(1000), end: new Date(0).setFullYear(2000), zoomMin: 1000 * 60 * 60 * 24 * 365 * 10
         });
 
+        // Timeline Click Logic Fixed
         timeline.on('select', (props) => {
             if (props.items.length) {
                 const item = timelineData.get(props.items[0]);
@@ -920,8 +800,28 @@
         function jumpToDate(year) { timeline.moveTo(new Date(0).setFullYear(year)); }
 
         // --- PANEL UI ---
+        function enterSite() {
+            document.getElementById('welcome-modal').style.opacity = 0;
+            setTimeout(() => { document.getElementById('welcome-modal').style.display = 'none'; }, 500);
+            
+            // Deep Link Check
+            const urlParams = new URLSearchParams(window.location.search);
+            const startId = urlParams.get('id');
+            if (startId) {
+                setTimeout(() => {
+                    const node = allNodes.find(n => n.id === startId);
+                    if (node) {
+                        network.selectNodes([startId]);
+                        network.focus(startId, { scale: 1.5, animation: true });
+                        openPanel(node.data);
+                    }
+                }, 1000);
+            }
+        }
+
         function openPanel(d) {
             document.getElementById('p-name').innerText = d.iast || d.label;
+            
             if (d.isDeity) {
                 document.getElementById('p-religion').innerText = d.religion || "";
                 document.getElementById('p-dates').innerText = "Divine / Timeless";
@@ -945,14 +845,15 @@
                 else ul.innerHTML = "<li>No other major records listed.</li>";
             }
             document.getElementById('p-note').innerText = d.note || "";
-            let parent = lineages.find(l => l.t === d.id); 
-            let lText = "Source / Independent";
-            if (parent) lText = `${parent.type} of ${parent.s}`;
-            document.getElementById('p-lineage').innerText = lText;
-            
+            const wikiBtn = document.getElementById('p-wiki');
             const wikiSlug = d.wiki || d.label.replace(/\s+/g, '_');
-            document.getElementById('p-wiki').href = `https://en.wikipedia.org/wiki/${wikiSlug}`;
-
+            wikiBtn.href = `https://en.wikipedia.org/wiki/${wikiSlug}`;
+            
+            let parent = lineages.find(l => l.t === d.id); 
+            let lineageText = "Source / Independent";
+            if (parent) lineageText = `${parent.type} of ${parent.s}`;
+            document.getElementById('p-lineage').innerText = lineageText;
+            
             const panel = document.getElementById('side-panel');
             panel.classList.add('open');
             if(window.innerWidth > 768) panel.style.width = "400px";
@@ -968,11 +869,57 @@
             // Reset opacity
             const allIds = data.nodes.getIds();
             const resets = allIds.map(id => {
-                if (network.isCluster(id)) return { id: id, color: { opacity: 1 } };
                 const original = allNodes.find(n => n.id === id);
-                return { id: id, color: original.color };
+                if(original) return { id: id, color: original.color };
+                return {id: id, color: {opacity: 1}};
             });
             data.nodes.update(resets);
+        }
+
+        // --- FILTER FUNCTION (Re-activates Physics briefly) ---
+        function applyFilters() {
+            if(clustersActive) toggleClusters(); // Uncluster first
+
+            const sFilter = document.getElementById('schoolFilter').value;
+            const rFilter = document.getElementById('regionFilter').value;
+            let targetIds = new Set();
+
+            allNodes.forEach(n => {
+                let p = n.data;
+                let mS = (sFilter === 'all') || (p.school === sFilter);
+                if (sFilter === 'Buddhism' && ['Theravada','Mahayana','Vajrayana','Zen'].includes(p.school)) mS = true;
+                let mR = (rFilter === 'all') || (p.region === rFilter || p.subregion === rFilter);
+                if (mS && mR) targetIds.add(n.id);
+            });
+
+            // Show Lineage
+            if (sFilter !== 'all' || rFilter !== 'all') {
+                let visibleIds = new Set(targetIds);
+                let changed = true;
+                while(changed) {
+                    changed = false;
+                    allEdges.forEach(e => {
+                        if(visibleIds.has(e.to) && !visibleIds.has(e.from)) {
+                             visibleIds.add(e.from);
+                             changed = true;
+                        }
+                    });
+                }
+                const filteredNodes = allNodes.filter(n => visibleIds.has(n.id));
+                const filteredEdges = allEdges.filter(e => visibleIds.has(e.from) && visibleIds.has(e.to));
+                data.nodes.clear(); data.edges.clear();
+                data.nodes.add(filteredNodes);
+                data.edges.add(filteredEdges);
+            } else {
+                data.nodes.clear(); data.edges.clear();
+                data.nodes.add(allNodes);
+                data.edges.add(allEdges);
+            }
+
+            // WIGGLE
+            network.setOptions({ physics: { enabled: true } });
+            network.stabilize();
+            setTimeout(() => { network.setOptions({ physics: { enabled: false } }); }, 1500);
         }
 
         // --- SEARCH ---
@@ -1005,12 +952,12 @@
         });
         document.addEventListener('click', function(e) { if (e.target !== searchInput && e.target !== searchResults) searchResults.style.display = 'none'; });
 
-        // --- GUTTER ---
+        // --- DRAG GUTTER ---
         const gutter = document.getElementById('drag-gutter');
         const timelineDiv = document.getElementById('mytimeline');
         let isDragging = false; let startY, startHeight;
         gutter.addEventListener('mousedown', (e) => { isDragging = true; startY = e.clientY; startHeight = timelineDiv.offsetHeight; document.body.style.cursor = 'ns-resize'; document.body.style.userSelect = 'none'; });
-        window.addEventListener('mousemove', (e) => { if (!isDragging) return; const deltaY = startY - e.clientY; const newHeight = startHeight + deltaY; if (newHeight > 50) timelineDiv.style.height = newHeight + 'px'; });
+        window.addEventListener('mousemove', (e) => { if (!isDragging) return; const deltaY = startY - e.clientY; const newHeight = startHeight + deltaY; if (newHeight > 50 && newHeight < window.innerHeight * 0.8) timelineDiv.style.height = newHeight + 'px'; });
         window.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; network.redraw(); timeline.redraw(); }});
     </script>
 </body>
