@@ -27,6 +27,7 @@
             flex-direction: column;
         }
 
+        /* --- HEADER --- */
         header {
             height: 70px;
             flex-shrink: 0;
@@ -67,6 +68,7 @@
             border-color: var(--gold);
         }
 
+        /* --- MAIN LAYOUT --- */
         .main-container {
             flex-grow: 1;
             position: relative; 
@@ -81,9 +83,10 @@
             background: radial-gradient(circle at center, #111 0%, #050505 100%);
         }
 
+        /* --- TIMELINE CUSTOMIZATION (MINIMALIST) --- */
         #mytimeline {
             height: 200px; 
-            background: rgba(10,10,10,0.95);
+            background: #080808;
             border-top: 1px solid var(--border);
             z-index: 20;
             position: relative;
@@ -91,6 +94,46 @@
             flex-shrink: 0;
         }
 
+        /* Override Vis.js Default "Brutalist" Boxes */
+        .vis-timeline {
+            border: none !important;
+        }
+        
+        .vis-time-axis .vis-text {
+            color: #555 !important;
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+        }
+
+        .vis-time-axis .vis-grid.vis-minor {
+            border-color: #222 !important;
+        }
+        
+        .vis-time-axis .vis-grid.vis-major {
+            border-color: #333 !important;
+        }
+
+        /* The Items on the Timeline */
+        .vis-item {
+            background-color: transparent !important; /* No box background */
+            border: none !important; /* No box border */
+            color: #aaa !important;
+            font-family: 'Noto Serif', serif;
+            font-size: 0.85rem;
+            padding: 0 5px !important;
+            border-left-width: 2px !important; /* Just a colored marker line */
+            border-left-style: solid !important;
+            transition: all 0.2s ease;
+        }
+
+        .vis-item.vis-selected {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            font-size: 1rem;
+            z-index: 100;
+        }
+
+        /* --- DRAG GUTTER --- */
         #drag-gutter {
             height: 8px;
             background: #1a1a1a;
@@ -106,7 +149,7 @@
         #drag-gutter:hover { background: #333; }
         #drag-gutter::after { content: "••••"; color: #555; font-size: 12px; margin-top: -5px; letter-spacing: 2px; }
 
-        /* SIDE PANEL */
+        /* --- SIDE PANEL --- */
         #side-panel {
             width: 0;
             background: var(--panel);
@@ -180,6 +223,7 @@
             margin-left: -1em;
         }
 
+        /* --- ACCURATE LEGEND --- */
         .legend {
             position: absolute;
             bottom: 20px;
@@ -187,22 +231,70 @@
             z-index: 1000;
             display: flex;
             flex-direction: column; 
-            gap: 6px; 
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.5);
-            padding: 12px 15px; 
-            border-radius: 6px;
+            gap: 8px; 
+            background: rgba(0, 0, 0, 0.8); /* Darker background for readability */
+            border: 1px solid #333;
+            color: #bbb;
+            padding: 15px; 
+            border-radius: 4px;
             font-size: 0.8rem;
             backdrop-filter: blur(4px);
             pointer-events: none;
+            min-width: 140px;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 8px; 
+            gap: 10px;
+            font-family: 'Cinzel', serif;
         }
+
+        /* Custom shapes to match Vis.js canvas rendering */
+        .shape-star {
+            width: 0; 
+            height: 0; 
+            border-left: 5px solid transparent; 
+            border-right: 5px solid transparent; 
+            border-bottom: 10px solid #ffd700; 
+            position: relative;
+            margin-bottom: 3px;
+        }
+        .shape-star:after {
+            content: "";
+            width: 0; 
+            height: 0; 
+            border-left: 5px solid transparent; 
+            border-right: 5px solid transparent; 
+            border-top: 10px solid #ffd700; 
+            position: absolute;
+            top: 3px; 
+            left: -5px;
+        }
+
+        .shape-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #fff; /* Neutral white for generic person */
+            border-radius: 50%;
+            border: 1px solid #555;
+        }
+
+        .shape-line {
+            width: 20px;
+            height: 1px;
+            background-color: #777;
+        }
+
+        .color-key {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+            font-size: 0.6rem;
+            color: #666;
+            flex-wrap: wrap;
+        }
+        .color-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
         
         .opus-link {
             color: var(--gold);
@@ -277,11 +369,20 @@
 
     <div class="main-container">
         <div id="network"></div>
+        
         <div class="legend">
-            <div class="legend-item"><span style="color: #ffd700">★</span> Deity</div>
-            <div class="legend-item"><span style="color: #00bcd4">●</span> People</div>
-            <div class="legend-item"><span style="color: #555">──</span> Lineage</div>
+            <div class="legend-item"><div class="shape-star"></div> Deity</div>
+            <div class="legend-item"><div class="shape-dot"></div> Philosopher</div>
+            <div class="legend-item"><div class="shape-line"></div> Connection</div>
+            <hr style="border: 0; border-top: 1px solid #333; width: 100%; margin: 5px 0;">
+            <div class="color-key">
+                <div><span class="color-dot" style="background:#ff9800"></span> Advaita</div>
+                <div><span class="color-dot" style="background:#e91e63"></span> Buddhism</div>
+                <div><span class="color-dot" style="background:#00bcd4"></span> Nyaya</div>
+                <div><span class="color-dot" style="background:#ffeb3b"></span> Bhakti</div>
+            </div>
         </div>
+
         <div id="side-panel">
             <div class="panel-content" id="panel-content">
                 <div id="p-name" class="p-title"></div>
@@ -604,8 +705,7 @@
             {s:"Kapila", t:"Asuri", type:"Guru"}, {s:"Asuri", t:"Panchashikha", type:"Guru"},
             {s:"Panchashikha", t:"IshvaraKrishna", type:"Lineage"},
             {s:"Ramanuja", t:"Madhva", type:"Reaction"}, {s:"Jayadeva", t:"Chaitanya", type:"Influence"},
-            {s:"Chaitanya", t:"Tagore", type:"Influence"}, {s:"Ramakrishna", t:"Vivekananda", type:"Guru"},
-            {s:"Vivekananda", t:"Nivedita", type:"Guru"},
+            {s:"Chaitanya", t:"Tagore", type:"Influence"}, {s:"Vivekananda", t:"Nivedita", type:"Guru"},
             {s:"Panini", t:"Voltaire", type:"Study"}, {s:"Vyasa", t:"Oppenheimer", type:"Study"},
             {s:"Yajnavalkya", t:"Schopenhauer", type:"Study"}, {s:"Vivekananda", t:"Tesla", type:"Meeting"},
             {s:"Kalidasa", t:"Goethe", type:"Inspiration"}, {s:"Jones", t:"MaxMuller", type:"Influence"}
@@ -834,7 +934,8 @@
             content: t.label,
             start: new Date(0).setFullYear(t.year),
             className: t.school,
-            personId: t.id
+            personId: t.id,
+            style: `color: ${getColor(t.school)}; border-left-color: ${getColor(t.school)};` // INJECT COLOR STYLE DIRECTLY
         })));
 
         const timeline = new vis.Timeline(document.getElementById('mytimeline'), timelineData, {
