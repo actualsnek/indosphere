@@ -6,7 +6,7 @@
     <title>Indosphere: The Grand Archive</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Noto+Serif:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #050505;
@@ -45,6 +45,7 @@
             font-size: 1.4rem;
             letter-spacing: 2px;
             color: var(--gold);
+            font-weight: 700;
         }
 
         .controls {
@@ -68,7 +69,7 @@
             border-color: var(--gold);
         }
 
-        /* --- MAIN LAYOUT --- */
+        /* --- MAIN AREA --- */
         .main-container {
             flex-grow: 1;
             position: relative; 
@@ -83,7 +84,7 @@
             background: radial-gradient(circle at center, #111 0%, #050505 100%);
         }
 
-        /* --- TIMELINE CUSTOMIZATION (MINIMALIST) --- */
+        /* --- TIMELINE (AESTHETIC UPGRADE) --- */
         #mytimeline {
             height: 200px; 
             background: #080808;
@@ -94,43 +95,38 @@
             flex-shrink: 0;
         }
 
-        /* Override Vis.js Default "Brutalist" Boxes */
-        .vis-timeline {
-            border: none !important;
-        }
-        
-        .vis-time-axis .vis-text {
-            color: #555 !important;
-            font-family: 'Cinzel', serif;
-            font-size: 0.7rem;
-        }
+        /* Clean up the grid lines */
+        .vis-time-axis .vis-grid.vis-minor { border-color: #222; }
+        .vis-time-axis .vis-grid.vis-major { border-color: #333; }
+        .vis-time-axis .vis-text { color: #555; font-family: 'Cinzel', serif; }
 
-        .vis-time-axis .vis-grid.vis-minor {
-            border-color: #222 !important;
-        }
-        
-        .vis-time-axis .vis-grid.vis-major {
-            border-color: #333 !important;
-        }
-
-        /* The Items on the Timeline */
-        .vis-item {
-            background-color: transparent !important; /* No box background */
-            border: none !important; /* No box border */
-            color: #aaa !important;
+        /* The Dot (Point) Style */
+        .vis-item.vis-point {
+            background-color: transparent;
+            border-color: transparent;
+            color: #aaa;
             font-family: 'Noto Serif', serif;
             font-size: 0.85rem;
-            padding: 0 5px !important;
-            border-left-width: 2px !important; /* Just a colored marker line */
-            border-left-style: solid !important;
-            transition: all 0.2s ease;
         }
 
+        /* The Dot itself */
+        .vis-item.vis-dot {
+            border-width: 2px;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0,0,0,0.8);
+        }
+
+        /* The Selected Item */
         .vis-item.vis-selected {
-            color: #fff !important;
-            background-color: rgba(255, 255, 255, 0.05) !important;
-            font-size: 1rem;
-            z-index: 100;
+            background-color: transparent;
+            border-color: transparent;
+        }
+        
+        .vis-item.vis-selected .vis-dot {
+            border-width: 2px;
+            border-color: #fff !important;
+            box-shadow: 0 0 10px var(--gold);
+            transform: scale(1.2);
         }
 
         /* --- DRAG GUTTER --- */
@@ -223,7 +219,7 @@
             margin-left: -1em;
         }
 
-        /* --- ACCURATE LEGEND --- */
+        /* --- UPDATED LEGEND --- */
         .legend {
             position: absolute;
             bottom: 20px;
@@ -232,7 +228,7 @@
             display: flex;
             flex-direction: column; 
             gap: 8px; 
-            background: rgba(0, 0, 0, 0.8); /* Darker background for readability */
+            background: rgba(0, 0, 0, 0.8);
             border: 1px solid #333;
             color: #bbb;
             padding: 15px; 
@@ -250,48 +246,21 @@
             font-family: 'Cinzel', serif;
         }
 
-        /* Custom shapes to match Vis.js canvas rendering */
-        .shape-star {
-            width: 0; 
-            height: 0; 
-            border-left: 5px solid transparent; 
-            border-right: 5px solid transparent; 
-            border-bottom: 10px solid #ffd700; 
-            position: relative;
-            margin-bottom: 3px;
+        .symbol-star { font-size: 1.2rem; color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+        .symbol-dot { 
+            width: 10px; height: 10px; 
+            background-color: #00bcd4; 
+            border-radius: 50%; 
+            box-shadow: 0 0 5px rgba(0, 188, 212, 0.5); 
         }
-        .shape-star:after {
-            content: "";
-            width: 0; 
-            height: 0; 
-            border-left: 5px solid transparent; 
-            border-right: 5px solid transparent; 
-            border-top: 10px solid #ffd700; 
-            position: absolute;
-            top: 3px; 
-            left: -5px;
-        }
-
-        .shape-dot {
-            width: 10px;
-            height: 10px;
-            background-color: #fff; /* Neutral white for generic person */
-            border-radius: 50%;
-            border: 1px solid #555;
-        }
-
-        .shape-line {
-            width: 20px;
-            height: 1px;
-            background-color: #777;
-        }
+        .symbol-line { width: 20px; height: 1px; background-color: #777; }
 
         .color-key {
             display: flex;
-            gap: 5px;
+            gap: 8px;
             margin-top: 5px;
-            font-size: 0.6rem;
-            color: #666;
+            font-size: 0.65rem;
+            color: #777;
             flex-wrap: wrap;
         }
         .color-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
@@ -371,9 +340,9 @@
         <div id="network"></div>
         
         <div class="legend">
-            <div class="legend-item"><div class="shape-star"></div> Deity</div>
-            <div class="legend-item"><div class="shape-dot"></div> Philosopher</div>
-            <div class="legend-item"><div class="shape-line"></div> Connection</div>
+            <div class="legend-item"><div class="symbol-star">★</div> Deity</div>
+            <div class="legend-item"><div class="symbol-dot"></div> People</div>
+            <div class="legend-item"><div class="symbol-line"></div> Lineage</div>
             <hr style="border: 0; border-top: 1px solid #333; width: 100%; margin: 5px 0;">
             <div class="color-key">
                 <div><span class="color-dot" style="background:#ff9800"></span> Advaita</div>
@@ -484,7 +453,7 @@
             {id:"Nrisimhashrama", label:"Nrisimhashrama", year:1550, school:"Advaita", region:"South", work:"", others:["Commentaries on Advaita texts"], note:"Bridged classical and later Advaita; key commentator."},
             {id:"BrahmanandaSaraswati", label:"Swami Brahmananda Saraswati", year:1871, school:"Advaita", region:"North", work:"", others:["Vedic commentaries"], note:"Shankaracharya of Jyotirmath (1941-1953); guru of Karpatri Maharaj."},
             {id:"KarpatriMaharaj", label:"Swami Karpatri Maharaj", year:1907, school:"Advaita", region:"North", subregion:"Varanasi", work:"", others:["Ram Rajya Parishad texts"], note:"Dharma Samrat; founder of Akhil Bharatiya Ram Rajya Parishad; guru of Nischalananda."},
-            {id:"Sacchidanandendra", label:"Sacchidanandendra Sarasvati", year:1880, school:"Advaita", region:"South", work:"Vedanta Prakriya Pratyabhijna", others:[], note:"Reformer; emphasized pure Shankara over sub-schools."},
+            {id:"Sacchidanandendra", label:"Sacchidānandendra Sarasvati", year:1880, school:"Advaita", region:"South", work:"Vedanta Prakriya Pratyabhijna", others:[], note:"Reformer; emphasized pure Shankara over sub-schools."},
             {id:"RamanaMaharshi", label:"Ramana Maharshi", year:1879, school:"Advaita", region:"South", subregion:"Tamil Nadu", work:"Upadesa Saram", others:["Nan Yar? (Who Am I?)"], note:"Self-inquiry (atma-vicara); direct non-dual realization."},
             {id:"NisargadattaMaharaj", label:"Nisargadatta Maharaj", year:1897, school:"Advaita", region:"West", subregion:"Maharashtra", work:"I Am That", others:[], note:"Radical non-dualism; inquiry into 'I Am'."},
             {id:"Vivekananda", label:"Swami Vivekananda", year:1863, school:"Advaita", region:"East", subregion:"Bengal", work:"Raja Yoga", others:["Karma Yoga"], note:"Global reviver; practical Vedanta."},
@@ -841,6 +810,7 @@
                     value: p.isDeity ? 40 : 20,
                     color: { background: schoolColor, border: p.isDeity ? '#fff' : '#333' },
                     font: { size: p.isDeity ? 20 : 16 },
+                    shape: p.isDeity ? 'star' : 'dot', // ENSURE DEITY IS STAR
                     data: p
                 });
             });
@@ -933,18 +903,26 @@
             id: i,
             content: t.label,
             start: new Date(0).setFullYear(t.year),
-            className: t.school,
+            type: 'point', // VITAL CHANGE: Dots instead of ranges
+            className: 'vis-dot-item', // For styling hooks
             personId: t.id,
-            style: `color: ${getColor(t.school)}; border-left-color: ${getColor(t.school)};` // INJECT COLOR STYLE DIRECTLY
+            // Inline style injection to get dynamic school colors on dots
+            style: `border-color: ${getColor(t.school)}; color: #aaa;` 
         })));
 
         const timeline = new vis.Timeline(document.getElementById('mytimeline'), timelineData, {
             height: '100%',
-            stack: true,
-            style: 'background:#111; border:none; color:#777',
+            stack: true, // Auto-stack to avoid overlap
+            margin: { item: 10, axis: 5 },
+            orientation: 'bottom',
             start: new Date(0).setFullYear(1000),
             end: new Date(0).setFullYear(2000),
             zoomMin: 1000 * 60 * 60 * 24 * 365 * 10
+        });
+
+        // Add custom class to timeline items on render for CSS targeting
+        timeline.on('itemover', function (props) {
+             // Optional hover effects
         });
 
         timeline.on('select', (props) => {
