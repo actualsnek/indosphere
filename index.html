@@ -29,7 +29,7 @@
 
         header {
             height: 70px;
-            grid-row: 1;
+            flex-shrink: 0;
             background: var(--panel);
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -72,13 +72,12 @@
             position: relative; 
             display: flex;
             overflow: hidden; 
-            min-height: 100px; 
+            height: calc(100vh - 270px); /* Ensure space for header + timeline */
         }
 
         #network {
-            flex-grow: 1;
-            height: 100%; 
             width: 100%;
+            height: 100%;
             background: radial-gradient(circle at center, #111 0%, #050505 100%);
         }
 
@@ -117,7 +116,7 @@
             z-index: 5000;
             position: fixed;
             right: 0;
-            top: 60px;
+            top: 70px;
             bottom: 0;
             box-shadow: -5px 0 30px rgba(0, 0, 0, 0.9);
         }
@@ -156,18 +155,11 @@
             margin-top: 5px;
         }
 
-        .region-tag {
-            color: var(--gold);
-            font-style: italic;
-            margin-left: 5px;
-        }
-
         .iast {
             font-style: italic;
             color: #e6c673;
         }
 
-        /* WORKS LIST */
         .works-list {
             margin-top: 5px;
             padding-left: 0;
@@ -190,38 +182,26 @@
 
         .legend {
             position: absolute;
-            bottom: 5%;
+            bottom: 20px;
             left: 20px;
             z-index: 1000;
             display: flex;
             flex-direction: column; 
             gap: 6px; 
-            align-items: flex-start; 
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.5);
             padding: 12px 15px; 
             border-radius: 6px;
             font-size: 0.8rem;
-            backdrop-filter: blur(2px);
-            pointer-events: auto;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            cursor: default;
-            min-width: 120px;
+            backdrop-filter: blur(4px);
+            pointer-events: none;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
             gap: 8px; 
-        }
-
-        .legend:hover {
-            background: rgba(10, 10, 10, 0.95);
-            border-color: var(--gold);
-            color: #fff;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-            transform: scale(1.05) translateY(-5px);
         }
         
         .opus-link {
@@ -235,7 +215,6 @@
         .opus-link:hover {
             color: #fff; 
             border-bottom: 1px solid #fff;
-            text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
         }
     </style>
 </head>
@@ -346,7 +325,7 @@
             {id:"Varuna", label:"Varuṇa", group:"Deity", region:"Divine", isDeity:true, note:"God of Waters; Vedic deity of cosmic order."},
 
             // --- ANCIENT RISHIS ---
-            {id:"ShaktiRishi", label:"Śakti (Rishi)", year:-2500, school:"Vedas", region:"North", others:[], note:"Son of Vashishta; Father of Parashara."},
+            {id:"Shakti", label:"Śakti (Rishi)", year:-2500, school:"Vedas", region:"North", others:[], note:"Son of Vashishta; Father of Parashara."},
             {id:"Dhanvantari", label:"Dhanvantari", year:-3000, school:"Ayurveda", region:"Vedic", work:"Ayurveda", others:["Dhanvantari Nighantu"], note:"God of Medicine."},
             {id:"Vashishta", label:"Vashishta", year:-3000, school:"Vedas", region:"North", work:"Maṇḍala 7 of the Ṛgveda", others:["Yoga Vashishta"], note:"saptarṣiḥ."},
             {id:"Parashara", label:"Parashara", year:-2000, school:"Vedas", region:"North", work:"Vishnu Purana", others:["Parashara Smriti"], note:"Father of Vyasa."},
@@ -584,7 +563,7 @@
         const lineages = [
             {s:"Shiva", t:"Vasugupta", type:"Divine"}, {s:"Shiva", t:"Shankara", type:"Divine"},
             {s:"Narayana", t:"Brahma", type:"tradition"}, {s:"Brahma", t:"Vashishta", type:"tradition"},
-            {s:"Vashishta", t:"ShaktiRishi", type:"tradition"}, {s:"ShaktiRishi", t:"Parashara", type:"tradition"},
+            {s:"Vashishta", t:"Shakti", type:"tradition"}, {s:"Shakti", t:"Parashara", type:"tradition"},
             {s:"Parashara", t:"Vyasa", type:"tradition"}, {s:"Vyasa", t:"Shuka", type:"tradition"},
             {s:"Shuka", t:"Gaudapada", type:"tradition"}, {s:"Gaudapada", t:"Govinda", type:"Guru"},
             {s:"Govinda", t:"Shankara", type:"Guru"}, {s:"Shankara", t:"Suresvara", type:"Guru"},
@@ -688,31 +667,52 @@
 
         // INITIAL DATA PROCESSING
         if (typeof rawData !== 'undefined') {
-            rawData.forEach(p => {
+            // SAFETY: DE-DUPLICATE RAWDATA BEFORE PROCESSING
+            const seenIds = new Set();
+            const uniqueData = [];
+            rawData.forEach(item => {
+                if (!seenIds.has(item.id)) {
+                    seenIds.add(item.id);
+                    uniqueData.push(item);
+                } else {
+                    console.warn("Duplicate ID removed:", item.id);
+                }
+            });
+
+            uniqueData.forEach(p => {
+                let schoolColor = p.school ? getColor(p.school) : "#ddd";
+                if (p.isDeity) schoolColor = "#ffd700";
+
                 allNodes.push({
                     id: p.id,
                     label: p.isDeity ? "★ " + p.label : p.label,
-                    group: p.school,
+                    group: p.school || "Unknown",
                     value: p.isDeity ? 30 : 15,
-                    color: p.isDeity ? "#ffd700" : getColor(p.school),
+                    color: schoolColor,
                     shape: p.isDeity ? "star" : "dot",
                     data: p
                 });
             });
 
             lineages.forEach(l => {
-                let s = rawData.find(x => x.id === l.s);
-                let t = rawData.find(x => x.id === l.t);
+                // Use uniqueData for finding nodes to ensure we match the visible ones
+                let s = uniqueData.find(x => x.id === l.s);
+                let t = uniqueData.find(x => x.id === l.t);
+                
+                // If direct find fails, check if the ID exists in the map
+                if (!s && seenIds.has(l.s)) s = {id: l.s}; // Fallback (shouldn't happen with de-dupe)
+                if (!t && seenIds.has(l.t)) t = {id: l.t};
+
                 if (s && t) {
-                    let color = l.type.includes("Guru") ? "#d4af37" : "#555";
-                    let dashes = !l.type.includes("Guru");
+                    let color = (l.type && l.type.includes("Guru")) ? "#d4af37" : "#555";
+                    let dashes = (l.type && !l.type.includes("Guru"));
                     allEdges.push({
                         from: l.s,
                         to: l.t,
                         arrows: "to",
                         color: { color: color },
                         dashes: dashes,
-                        label: l.type,
+                        label: l.type || "",
                         font: { size: 9, color: '#777', strokeWidth: 0, align: 'middle' }
                     });
                 }
@@ -738,15 +738,15 @@
                 if (sFilter !== 'all') {
                     if (sFilter === 'Buddhism') {
                         const buddhistSchools = ['Buddhism', 'Theravada', 'Mahayana', 'Vajrayana', 'Zen'];
-                        if (!buddhistSchools.includes(p.school)) matchesSchool = false;
+                        if (!p.school || !buddhistSchools.includes(p.school)) matchesSchool = false;
                     } else {
-                        if (p.school !== sFilter) matchesSchool = false;
+                        if (!p.school || p.school !== sFilter) matchesSchool = false;
                     }
                 }
 
                 // Check Region
                 if (rFilter !== 'all') {
-                    if (p.region !== rFilter && p.subregion !== rFilter) matchesRegion = false;
+                    if ((!p.region || p.region !== rFilter) && (!p.subregion || p.subregion !== rFilter)) matchesRegion = false;
                 }
 
                 if (matchesSchool && matchesRegion) {
@@ -806,8 +806,9 @@
         timeline.on('select', (props) => {
             if (props.items.length) {
                 const item = timelineData.get(props.items[0]);
-                const person = rawData.find(p => p.id === item.personId);
-                if (person) openPanel(person);
+                // Use allNodes to find data, as rawData might have dupes
+                const node = allNodes.find(n => n.id === item.personId);
+                if (node) openPanel(node.data);
             }
         });
 
@@ -819,7 +820,7 @@
             
         document.getElementById('p-school').innerText = d.school || "";
         
-        document.getElementById('p-region').innerText = d.region + (d.subregion ? ` (${d.subregion})` : "");
+        document.getElementById('p-region').innerText = (d.region || "") + (d.subregion ? ` (${d.subregion})` : "");
 
         const workEl = document.getElementById('p-work');
         if (d.work && d.workUrl) {
@@ -831,7 +832,7 @@
 
     document.getElementById('p-note').innerText = d.note || "";
     
-    let parent = lineages.find(l => l.t === d.id && l.type.includes("Guru"));
+    let parent = lineages.find(l => l.t === d.id && l.type && l.type.includes("Guru"));
     document.getElementById('p-lineage').innerText = parent ? `Disciple of ${parent.s}` : "Source / Independent";
 
     const ul = document.getElementById('p-others');
