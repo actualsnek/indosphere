@@ -79,6 +79,7 @@
             flex-grow: 1;
             height: 100%; 
             width: 100%;
+            background: radial-gradient(circle at center, #111 0%, #050505 100%);
         }
 
         #mytimeline {
@@ -236,12 +237,6 @@
             border-bottom: 1px solid #fff;
             text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
         }
-
-        .external-icon {
-            font-size: 0.8em;
-            margin-left: 5px;
-            vertical-align: super;
-        }
     </style>
 </head>
 
@@ -351,7 +346,7 @@
             {id:"Varuna", label:"Varuṇa", group:"Deity", region:"Divine", isDeity:true, note:"God of Waters; Vedic deity of cosmic order."},
 
             // --- ANCIENT RISHIS ---
-            {id:"Shakti", label:"Śakti (Rishi)", year:-2500, school:"Vedas", region:"North", others:[], note:"Son of Vashishta; Father of Parashara."},
+            {id:"ShaktiRishi", label:"Śakti (Rishi)", year:-2500, school:"Vedas", region:"North", others:[], note:"Son of Vashishta; Father of Parashara."},
             {id:"Dhanvantari", label:"Dhanvantari", year:-3000, school:"Ayurveda", region:"Vedic", work:"Ayurveda", others:["Dhanvantari Nighantu"], note:"God of Medicine."},
             {id:"Vashishta", label:"Vashishta", year:-3000, school:"Vedas", region:"North", work:"Maṇḍala 7 of the Ṛgveda", others:["Yoga Vashishta"], note:"saptarṣiḥ."},
             {id:"Parashara", label:"Parashara", year:-2000, school:"Vedas", region:"North", work:"Vishnu Purana", others:["Parashara Smriti"], note:"Father of Vyasa."},
@@ -589,7 +584,7 @@
         const lineages = [
             {s:"Shiva", t:"Vasugupta", type:"Divine"}, {s:"Shiva", t:"Shankara", type:"Divine"},
             {s:"Narayana", t:"Brahma", type:"tradition"}, {s:"Brahma", t:"Vashishta", type:"tradition"},
-            {s:"Vashishta", t:"Shakti", type:"tradition"}, {s:"Shakti", t:"Parashara", type:"tradition"},
+            {s:"Vashishta", t:"ShaktiRishi", type:"tradition"}, {s:"ShaktiRishi", t:"Parashara", type:"tradition"},
             {s:"Parashara", t:"Vyasa", type:"tradition"}, {s:"Vyasa", t:"Shuka", type:"tradition"},
             {s:"Shuka", t:"Gaudapada", type:"tradition"}, {s:"Gaudapada", t:"Govinda", type:"Guru"},
             {s:"Govinda", t:"Shankara", type:"Guru"}, {s:"Shankara", t:"Suresvara", type:"Guru"},
